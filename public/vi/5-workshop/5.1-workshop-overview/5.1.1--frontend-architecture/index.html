@@ -15,21 +15,21 @@
     <title>Kiến trúc Frontend :: Báo cáo thực tập</title>
 
     
-    <link href="/css/nucleus.css?1784528550" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784528550" rel="stylesheet">
-    <link href="/css/hybrid.css?1784528550" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784528550" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784528550" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784528550" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784528550" rel="stylesheet">
-    <link href="/css/theme.css?1784528550" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784528550" rel="stylesheet">
+    <link href="/css/nucleus.css?1784540169" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784540169" rel="stylesheet">
+    <link href="/css/hybrid.css?1784540169" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784540169" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784540169" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784540169" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784540169" rel="stylesheet">
+    <link href="/css/theme.css?1784540169" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784540169" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784528550" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784540169" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784528550"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784540169"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784528550"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784528550"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784540169"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784540169"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/\/vi";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784528550"></script>
+<script type="text/javascript" src="/js/search.js?1784540169"></script>
  
   </div>
 
@@ -869,7 +869,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
-  title="Mô phỏng On-premises DNS "
+  title="Tạo AWS Lambda"
   class="dd-item 
         
         
@@ -877,7 +877,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/">
-     <b> 5.4.4 </b> Mô phỏng On-premises DNS  
+     <b> 5.4.4 </b> Tạo AWS Lambda 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -887,7 +887,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
-  title="Tạo AWS Lambda"
+  title="Tạo API Gateway"
   class="dd-item 
         
         
@@ -895,7 +895,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/">
-     <b> 5.4.5 </b> Tạo AWS Lambda 
+     <b> 5.4.5 </b> Tạo API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -905,7 +905,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-  title="Tạo API Gateway"
+  title="Viết Frontend gọi API Gateway"
   class="dd-item 
         
         
@@ -913,7 +913,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/">
-     <b> 5.4.6 </b> Tạo API Gateway 
+     <b> 5.4.6 </b> Viết Frontend gọi API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -923,7 +923,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/"
-  title="Viết Frontend gọi API Gateway"
+  title="Tự động triển khai Lambda bằng CodePipeline"
   class="dd-item 
         
         
@@ -931,7 +931,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/">
-     <b> 5.4.7 </b> Viết Frontend gọi API Gateway 
+     <b> 5.4.7 </b> Tự động triển khai Lambda bằng CodePipeline 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -1171,7 +1171,16 @@
                 </div>
                 
                     <div class="progress">
-  <div class="wrapper"><nav id="TableOfContents"></nav></div>
+  <div class="wrapper"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-giải-thích-cấu-trúc-thư-mục-frontend">1. Giải thích cấu trúc thư mục Frontend</a></li>
+        <li><a href="#2-luồng-dữ-liệu">2. Luồng dữ liệu</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
 </div>
 
                 
@@ -1194,7 +1203,257 @@
 
 
 
-	
+	<h3 id="1-giải-thích-cấu-trúc-thư-mục-frontend">1. Giải thích cấu trúc thư mục Frontend</h3>
+<h4 id="11-cấu-trúc-tổng-quan">1.1. Cấu trúc tổng quan</h4>
+<pre tabindex="0"><code>smart-docs-ai/                         # Thư mục gốc của frontend
+├── public/                            # Tài nguyên tĩnh (favicon, logo...)
+│
+├── src/
+│   ├── api/                           # Cấu hình HTTP &amp; tích hợp AWS
+│   │   ├── axiosConfig.js             # Axios instance + interceptor (tự gắn Bearer token, retry 503/504)
+│   │   ├── cognito.js                 # Kết nối AWS Cognito UserPool, helper lấy JWT token
+│   │   └── services/
+│   │       ├── smartdocService.js     # Các API call: upload, process, chat, files, history...
+│   │       └── profileService.js     # Các API call: getProfile, updatePersonalInfo, updateAvatar, changePassword
+│   │
+│   ├── assets/                        # Tài nguyên tĩnh (hình ảnh, icon...)
+│   │
+│   ├── components/                    # Shared/reusable components
+│   │   ├── common/                    # Components tiện ích dùng chung
+│   │   │   ├── Loading.jsx            # Spinner loading
+│   │   │   ├── LoadMore.jsx           # Nút tải thêm
+│   │   │   └── alert/
+│   │   │       └── FailedAlert.jsx    # Alert báo lỗi
+│   │   │
+│   │   └── ui/                        # Shadcn/ui components (Radix-based)
+│   │       ├── alert.jsx
+│   │       ├── badge.jsx
+│   │       ├── button.jsx
+│   │       ├── card.jsx
+│   │       ├── dialog.jsx
+│   │       ├── dropdown-menu.jsx
+│   │       ├── input.jsx
+│   │       ├── label.jsx
+│   │       ├── progress.jsx
+│   │       ├── radio-group.jsx
+│   │       ├── select.jsx
+│   │       ├── sonner.jsx             # Toaster provider (Sonner)
+│   │       ├── spinner.jsx
+│   │       ├── switch.jsx
+│   │       ├── tabs.jsx
+│   │       └── toggle.jsx
+│   │
+│   ├── contexts/                      # React Context API
+│   │   └── ThemeContext.jsx           # Quản lý Dark/Light mode (lưu vào localStorage)
+│   │
+│   ├── features/                      # Modules theo tính năng (Feature-Sliced Design)
+│   │   ├── auth/                      # Xác thực người dùng
+│   │   │   ├── components/
+│   │   │   │   ├── LoginForm.jsx      # Form đăng nhập (gọi Cognito qua Redux thunk)
+│   │   │   │   ├── RegisterForm.jsx   # Form đăng ký (gọi backend API)
+│   │   │   │   └── ProtectedRoute.jsx # HOC bảo vệ route (kiểm tra isAuthenticated)
+│   │   │   └── pages/
+│   │   │       ├── LoginPage.jsx      # Trang đăng nhập
+│   │   │       └── RegisterPage.jsx   # Trang đăng ký
+│   │   │
+│   │   ├── profile/                   # Hồ sơ cá nhân
+│   │   │   ├── components/
+│   │   │   │   ├── ProfileAvatar.jsx  # Upload &amp; hiển thị avatar
+│   │   │   │   ├── PersonalInfoTab.jsx# Tab chỉnh sửa thông tin cá nhân
+│   │   │   │   └── SecurityTab.jsx    # Tab đổi mật khẩu
+│   │   │   └── pages/
+│   │   │       └── ProfilePage.jsx    # Trang hồ sơ (tabs: Thông tin / Bảo mật)
+│   │   │
+│   │   └── smartdocs/                 # Tính năng chính: RAG Chat với tài liệu
+│   │       ├── components/
+│   │       │   ├── chat/              # Khu vực hội thoại
+│   │       │   │   ├── ChatArea.jsx           # Container chính của chat (layout trái/phải)
+│   │       │   │   ├── ChatInput.jsx          # Ô nhập câu hỏi + nút gửi
+│   │       │   │   ├── ChatMessage.jsx        # Hiển thị 1 tin nhắn (user / AI)
+│   │       │   │   ├── WelcomeHero.jsx        # Màn hình chào khi chưa có chat
+│   │       │   │   ├── SearchSettings.jsx     # Cài đặt RAG (SelfRAG, CoRAG, top_k...)
+│   │       │   │   ├── CoRagMetadata.jsx      # Hiển thị metadata CoRAG
+│   │       │   │   ├── SelfRagMetadata.jsx    # Hiển thị metadata SelfRAG
+│   │       │   │   └── SourceCitationPanel.jsx# Bảng nguồn trích dẫn của câu trả lời
+│   │       │   │
+│   │       │   ├── layout/            # Layout tổng thể của trang SmartDoc
+│   │       │   │   └── SmartSidebar.jsx       # Sidebar chính (collapsible, responsive mobile)
+│   │       │   │
+│   │       │   └── sidebar/           # Các sub-component bên trong Sidebar
+│   │       │       ├── StatusBadge.jsx        # Badge trạng thái kết nối LLM
+│   │       │       ├── KpiRow.jsx             # Hàng thống kê (số file, trang, chunk)
+│   │       │       ├── ChunkSettings.jsx      # Cài đặt chunk_size / chunk_overlap
+│   │       │       ├── FileUploader.jsx        # Khu vực drag-and-drop upload tài liệu
+│   │       │       ├── FileCard.jsx           # Card hiển thị 1 file đã xử lý
+│   │       │       ├── FileList.jsx           # Danh sách các file đã xử lý
+│   │       │       ├── ActionButtons.jsx      # Nút xoá tài liệu / xoá lịch sử chat
+│   │       │       └── ChatHistoryList.jsx    # Danh sách lịch sử hội thoại
+│   │       │
+│   │       └── pages/
+│   │           └── SmartdocPage.jsx   # Entry page: ghép SmartSidebar + ChatArea
+│   │
+│   ├── lib/                           # Utility functions &amp; helpers
+│   │   ├── utils.js                   # classNames utility (cn — kết hợp clsx + tailwind-merge)
+│   │   ├── helpers.js                 # Các hàm tiện ích: formatDate, buildCategoryById, calculatePercent...
+│   │   ├── alertUtils.js              # Tiện ích hiển thị thông báo (toast / alert)
+│   │   └── goalUtils.js              # Tiện ích tính toán mục tiêu
+│   │
+│   ├── store/                         # Redux Toolkit store
+│   │   ├── index.js                   # Cấu hình store (combineReducers: auth + smartdoc)
+│   │   ├── README.md                  # Giải thích kỹ thuật createSelector / memoization
+│   │   └── slices/
+│   │       ├── authSlice.js           # State xác thực: login, register, logout, getProfile, thông tin user
+│   │       └── smartdocSlice.js       # State SmartDoc: files, chat history, Ollama status, messages
+│   │
+│   ├── App.jsx                        # Root component: định nghĩa Routes, ThemeProvider, Toaster
+│   ├── main.jsx                       # Entry point: mount React vào DOM, bọc BrowserRouter + Redux Provider
+│   └── index.css                      # Global styles + Tailwind directives
+│
+├── .env-example                       # Template biến môi trường
+├── buildspec.yml                      # AWS CodeBuild config (CI/CD)
+├── components.json                    # Cấu hình Shadcn/ui
+├── eslint.config.js                   # ESLint config
+├── index.html                         # HTML entry point (Vite)
+├── jsconfig.json                      # Path alias config cho IDE
+├── package.json
+├── tailwind.config.js                 # Tailwind CSS config
+├── vite.config.js                     # Vite config (proxy API → AWS API Gateway, path alias @/)
+└── README.md
+</code></pre><hr>
+<h4 id="12-giải-thích-chi-tiết-từng-thư-mục">1.2. Giải thích chi tiết từng thư mục</h4>
+<h5 id="srcapi"><code>src/api/</code></h5>
+<p>Tầng giao tiếp với backend AWS.</p>
+<ul>
+<li>
+<p><strong><code>axiosConfig.js</code></strong>: Tạo một <code>axiosClient</code> dùng chung với <code>baseURL</code> lấy từ biến môi trường <code>VITE_API_BASE_URL</code>. Có 2 interceptor quan trọng:</p>
+<ul>
+<li><strong>Request interceptor</strong>: Tự động lấy JWT <code>idToken</code> từ Cognito session và gắn vào header <code>Authorization: Bearer &lt;token&gt;</code> cho mọi request.</li>
+<li><strong>Response interceptor</strong>: Tự động retry (tối đa 10 lần, mỗi lần cách 5 giây) khi gặp lỗi <code>503</code>, <code>504</code>, hoặc timeout — đây là cơ chế xử lý Lambda cold start.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>cognito.js</code></strong>: Khởi tạo <code>CognitoUserPool</code> với <code>Storage: sessionStorage</code> (mỗi tab trình duyệt có session độc lập, tránh xung đột multi-tab). Export hàm <code>getSessionToken()</code> để lấy JWT token hiện tại.</p>
+</li>
+<li>
+<p><strong><code>services/smartdocService.js</code></strong>: Tập hợp toàn bộ API call cho tính năng RAG:</p>
+<ul>
+<li><code>checkStatus()</code> — GET <code>/api/status</code> (kiểm tra LLM online)</li>
+<li><code>getUploadUrl()</code> — POST <code>/api/upload-url</code> (lấy S3 presigned URL)</li>
+<li><code>uploadFileToS3()</code> — PUT trực tiếp lên S3 qua presigned URL</li>
+<li><code>processDocument()</code> — POST <code>/api/process</code> (chunking + embedding)</li>
+<li><code>getDocuments()</code> — GET <code>/api/files</code></li>
+<li><code>deleteDocument()</code> / <code>clearDocuments()</code></li>
+<li><code>sendMessage()</code> — POST <code>/api/chat</code></li>
+<li><code>getChatHistory()</code> / <code>clearChatHistory()</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>services/profileService.js</code></strong>: API call quản lý hồ sơ người dùng:</p>
+<ul>
+<li><code>getProfile()</code> — GET <code>/api/profile</code></li>
+<li><code>updatePersonalInfo()</code> — PUT <code>/api/profile/personal-info</code></li>
+<li><code>updateAvatar()</code> — PUT <code>/api/profile/avatar</code> (base64, tự động chọn DynamoDB hay S3 ở backend)</li>
+<li><code>changePassword()</code> — POST <code>/api/profile/change-password</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h5 id="srcstore"><code>src/store/</code></h5>
+<p>Quản lý state toàn cục bằng <strong>Redux Toolkit</strong>.</p>
+<p>Store có 2 reducer chính:</p>
+<ul>
+<li>
+<p><strong><code>authSlice</code></strong>: Quản lý vòng đời xác thực:</p>
+<ul>
+<li><code>login</code> (async thunk) — Xác thực trực tiếp qua Cognito SDK, lưu user vào <code>sessionStorage</code></li>
+<li><code>register</code> (async thunk) — Gọi backend API để tạo tài khoản và đồng bộ DynamoDB</li>
+<li><code>logout</code> (async thunk) — Sign out Cognito + xóa session</li>
+<li><code>getProfile</code> (async thunk) — Lấy thông tin đầy đủ từ DynamoDB (bao gồm avatar)</li>
+<li>State: <code>user</code> (thông tin user), <code>isAuthenticated</code>, <code>loading</code>, <code>error</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>smartdocSlice</code></strong>: Quản lý toàn bộ state của tính năng RAG:</p>
+<ul>
+<li><code>checkOllamaStatus</code> — Kiểm tra trạng thái LLM backend</li>
+<li><code>fetchProcessedFiles</code> — Lấy danh sách tài liệu đã xử lý</li>
+<li><code>fetchChatHistory</code> — Lấy lịch sử hội thoại</li>
+<li><code>sendChatMessage</code> — Gửi câu hỏi và nhận phản hồi từ AI</li>
+<li><code>uploadAndProcessDocument</code> — Pipeline upload file: lấy presigned URL → upload S3 → trigger process</li>
+<li>State: <code>ollamaStatus</code>, <code>processedFiles</code>, <code>chatHistory</code>, <code>messages</code>, <code>chunkSettings</code>&hellip;</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Xem <code>src/store/README.md</code> để hiểu chi tiết kỹ thuật <code>createSelector</code> và memoization.</p>
+</blockquote>
+<hr>
+<h5 id="srcfeatures"><code>src/features/</code></h5>
+<p>Tổ chức theo mô hình <strong>Feature-Sliced Design</strong> — mỗi tính năng là một module độc lập với <code>components/</code> và <code>pages/</code> riêng.</p>
+<p><strong><code>auth/</code></strong> — Xác thực:</p>
+<ul>
+<li><code>LoginPage</code> / <code>RegisterPage</code>: Trang công khai, không cần đăng nhập.</li>
+<li><code>ProtectedRoute</code>: HOC kiểm tra <code>isAuthenticated</code> từ Redux store; nếu chưa đăng nhập thì redirect về <code>/login</code>.</li>
+</ul>
+<p><strong><code>profile/</code></strong> — Hồ sơ cá nhân:</p>
+<ul>
+<li><code>ProfilePage</code>: Trang có 2 tab — <em>Thông tin cá nhân</em> và <em>Bảo mật</em>.</li>
+<li><code>ProfileAvatar</code>: Upload avatar (crop, resize, gửi base64).</li>
+<li><code>PersonalInfoTab</code>: Chỉnh sửa tên, email, SĐT, ngày sinh.</li>
+<li><code>SecurityTab</code>: Đổi mật khẩu.</li>
+</ul>
+<p><strong><code>smartdocs/</code></strong> — Tính năng chính RAG:</p>
+<ul>
+<li><code>SmartdocPage</code>: Trang chính, ghép <code>SmartSidebar</code> và <code>ChatArea</code> theo layout 2 cột.</li>
+<li><code>SmartSidebar</code> (layout): Sidebar có thể thu gọn (collapsible) trên desktop và dạng drawer overlay trên mobile. Chứa toàn bộ control: status LLM, upload file, danh sách file, cài đặt chunking, lịch sử chat, thông tin user + nút logout.</li>
+<li><code>ChatArea</code> (chat): Khu vực hiển thị hội thoại. Khi chưa có chat thì hiển thị <code>WelcomeHero</code>. Mỗi tin nhắn AI có thể kèm <code>SourceCitationPanel</code> (nguồn trích dẫn) và metadata RAG (<code>SelfRagMetadata</code> / <code>CoRagMetadata</code>).</li>
+</ul>
+<hr>
+<h5 id="srccontexts"><code>src/contexts/</code></h5>
+<ul>
+<li><strong><code>ThemeContext</code></strong>: Quản lý Dark/Light mode. Đọc preference từ <code>localStorage</code> và system preference khi khởi động. Toggle theme sẽ apply class <code>dark</code> lên <code>&lt;html&gt;</code> (tương thích Tailwind dark mode).</li>
+</ul>
+<hr>
+<h5 id="srccomponents"><code>src/components/</code></h5>
+<ul>
+<li><strong><code>ui/</code></strong>: Toàn bộ component từ <strong>Shadcn/ui</strong> (button, card, dialog, select, tabs, toast&hellip;). Đây là các primitive component dựa trên Radix UI + Tailwind.</li>
+<li><strong><code>common/</code></strong>: Component tiện ích tự viết dùng nhiều nơi: <code>Loading</code>, <code>LoadMore</code>, <code>FailedAlert</code>.</li>
+</ul>
+<hr>
+<h5 id="srclib"><code>src/lib/</code></h5>
+<ul>
+<li><strong><code>utils.js</code></strong>: Export hàm <code>cn()</code> — kết hợp <code>clsx</code> và <code>tailwind-merge</code> để merge class Tailwind an toàn.</li>
+<li><strong><code>helpers.js</code></strong>: Các hàm tiện ích: <code>formatDateToVNDate</code>, <code>buildCategoryById</code> (Map O(1)), <code>withCategory</code>, <code>calculatePercent</code>.</li>
+<li><strong><code>alertUtils.js</code></strong>: Wrapper tiện ích hiển thị thông báo toast.</li>
+<li><strong><code>goalUtils.js</code></strong>: Tiện ích tính toán liên quan đến mục tiêu.</li>
+</ul>
+<hr>
+<h3 id="2-luồng-dữ-liệu">2. Luồng dữ liệu</h3>
+<pre tabindex="0"><code>User Action
+    │
+    ▼
+Component (dispatch action)
+    │
+    ▼
+Redux Thunk (async thunk trong slice)
+    │
+    ├──► API Service (smartdocService / profileService)
+    │         │
+    │         ▼
+    │    axiosClient (tự gắn Cognito JWT token)
+    │         │
+    │         ▼
+    │    AWS API Gateway → Lambda → (S3 / DynamoDB / LLM)
+    │         │
+    │         ▼
+    │    Response data
+    │
+    ▼
+Redux Store (state updated)
+    │
+    ▼
+React Component re-render (useSelector)
+</code></pre>
 
 
 
@@ -2092,19 +2351,19 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784528550"></script>
-    <script src="/js/jquery.sticky.js?1784528550"></script>
-    <script src="/js/featherlight.min.js?1784528550"></script>
-    <script src="/js/highlight.pack.js?1784528550"></script>
+    <script src="/js/clipboard.min.js?1784540169"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784540169"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784540169"></script>
+    <script src="/js/jquery.sticky.js?1784540169"></script>
+    <script src="/js/featherlight.min.js?1784540169"></script>
+    <script src="/js/highlight.pack.js?1784540169"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784528550"></script>
-    <script src="/js/learn.js?1784528550"></script>
-    <script src="/js/hugo-learn.js?1784528550"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784540169"></script>
+    <script src="/js/learn.js?1784540169"></script>
+    <script src="/js/hugo-learn.js?1784540169"></script>
 
-    <link href="/mermaid/mermaid.css?1784528550" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784528550"></script>
+    <link href="/mermaid/mermaid.css?1784540169" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784540169"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
