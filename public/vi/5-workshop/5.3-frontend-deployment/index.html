@@ -15,21 +15,21 @@
     <title>Triển khai Frontend :: Báo cáo thực tập</title>
 
     
-    <link href="/css/nucleus.css?1784528550" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784528550" rel="stylesheet">
-    <link href="/css/hybrid.css?1784528550" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784528550" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784528550" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784528550" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784528550" rel="stylesheet">
-    <link href="/css/theme.css?1784528550" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784528550" rel="stylesheet">
+    <link href="/css/nucleus.css?1784538378" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784538378" rel="stylesheet">
+    <link href="/css/hybrid.css?1784538378" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784538378" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784538378" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784538378" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784538378" rel="stylesheet">
+    <link href="/css/theme.css?1784538378" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784538378" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784528550" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784538378" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784528550"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784538378"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784528550"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784528550"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784538378"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784538378"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/\/vi";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784528550"></script>
+<script type="text/javascript" src="/js/search.js?1784538378"></script>
  
   </div>
 
@@ -869,7 +869,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
-  title="Mô phỏng On-premises DNS "
+  title="Tạo AWS Lambda"
   class="dd-item 
         
         
@@ -877,7 +877,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/">
-     <b> 5.4.4 </b> Mô phỏng On-premises DNS  
+     <b> 5.4.4 </b> Tạo AWS Lambda 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -887,7 +887,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
-  title="Tạo AWS Lambda"
+  title="Tạo API Gateway"
   class="dd-item 
         
         
@@ -895,7 +895,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/">
-     <b> 5.4.5 </b> Tạo AWS Lambda 
+     <b> 5.4.5 </b> Tạo API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -905,7 +905,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-  title="Tạo API Gateway"
+  title="Viết Frontend gọi API Gateway"
   class="dd-item 
         
         
@@ -913,7 +913,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/">
-     <b> 5.4.6 </b> Tạo API Gateway 
+     <b> 5.4.6 </b> Viết Frontend gọi API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -923,7 +923,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/"
-  title="Viết Frontend gọi API Gateway"
+  title="Tự động triển khai Lambda bằng CodePipeline"
   class="dd-item 
         
         
@@ -931,7 +931,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/">
-     <b> 5.4.7 </b> Viết Frontend gọi API Gateway 
+     <b> 5.4.7 </b> Tự động triển khai Lambda bằng CodePipeline 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -1165,7 +1165,15 @@
                 </div>
                 
                     <div class="progress">
-  <div class="wrapper"><nav id="TableOfContents"></nav></div>
+  <div class="wrapper"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#nội-dung-thực-hiện">Nội dung thực hiện</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
 </div>
 
                 
@@ -1188,7 +1196,28 @@
 
 
 
-	
+	<h1 id="triển-khai-frontend">Triển khai Frontend</h1>
+<p>Trong phần này, <strong>nhóm</strong> sẽ thực hiện triển khai giao diện <strong>SmartDocs AI</strong> lên nền tảng AWS nhằm đưa ứng dụng vào môi trường vận hành thực tế, giúp người dùng có thể truy cập website thông qua Internet một cách nhanh chóng và ổn định. Quá trình triển khai không chỉ đảm bảo khả năng lưu trữ và phân phối các tệp tĩnh của ứng dụng mà còn tối ưu hiệu năng truy cập, đồng thời xây dựng quy trình triển khai tự động để giảm thiểu các thao tác thủ công khi cập nhật phiên bản mới.</p>
+<p>Để thực hiện, nhóm sử dụng các dịch vụ của AWS bao gồm:</p>
+<ul>
+<li><strong>Amazon S3</strong> để lưu trữ các tệp tĩnh của ứng dụng Frontend sau khi build.</li>
+<li><strong>Static Website Hosting</strong> để biến S3 Bucket thành một website tĩnh có thể truy cập qua Internet.</li>
+<li><strong>Bucket Policy</strong> và <strong>Block Public Access</strong> để cấu hình quyền truy cập phù hợp, cho phép người dùng truy cập website đồng thời đảm bảo tính bảo mật.</li>
+<li><strong>Amazon CloudFront</strong> để phân phối nội dung thông qua mạng CDN, giúp giảm độ trễ, tăng tốc độ tải trang và cải thiện trải nghiệm người dùng.</li>
+<li><strong>AWS CodePipeline</strong> kết hợp với <strong>GitHub</strong> để xây dựng quy trình CI/CD, tự động triển khai phiên bản mới của ứng dụng mỗi khi mã nguồn được cập nhật lên repository.</li>
+</ul>
+<p>Sau khi hoàn thành chương này, Frontend của hệ thống sẽ được triển khai thành công trên AWS, có thể truy cập thông qua CloudFront với hiệu năng cao, đồng thời hỗ trợ cập nhật ứng dụng một cách tự động, nhanh chóng và nhất quán.</p>
+<h3 id="nội-dung-thực-hiện">Nội dung thực hiện</h3>
+<ol>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.1-create-s3-bucket/">Tạo S3 Bucket và tải dữ liệu</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.2-enable-static-web-hosting/">Bật Static Website Hosting</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.3-config-block-public-access-settings/">Cấu hình Block Public Access</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.4-config-bucket-policy-public-object-access/">Cấu hình Bucket Policy/Public Object</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.5-website-verification/">Kiểm tra Website</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.6-accelerating-website-performance-with-cloudfront/">Tăng tốc Website với CloudFront</a></li>
+<li><a href="/vi/5-workshop/5.3-frontend-deployment/5.3.7-codepipeline-to-s3-frontend/">Tự động triển khai bằng CodePipeline (GitHub → S3)</a></li>
+</ol>
+
 
 
 
@@ -2088,19 +2117,19 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784528550"></script>
-    <script src="/js/jquery.sticky.js?1784528550"></script>
-    <script src="/js/featherlight.min.js?1784528550"></script>
-    <script src="/js/highlight.pack.js?1784528550"></script>
+    <script src="/js/clipboard.min.js?1784538378"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784538378"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784538378"></script>
+    <script src="/js/jquery.sticky.js?1784538378"></script>
+    <script src="/js/featherlight.min.js?1784538378"></script>
+    <script src="/js/highlight.pack.js?1784538378"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784528550"></script>
-    <script src="/js/learn.js?1784528550"></script>
-    <script src="/js/hugo-learn.js?1784528550"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784538378"></script>
+    <script src="/js/learn.js?1784538378"></script>
+    <script src="/js/hugo-learn.js?1784538378"></script>
 
-    <link href="/mermaid/mermaid.css?1784528550" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784528550"></script>
+    <link href="/mermaid/mermaid.css?1784538378" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784538378"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
