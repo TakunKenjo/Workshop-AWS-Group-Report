@@ -12,24 +12,24 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>Access S3 from on-premises :: Internship Report</title>
+    <title> :: Internship Report</title>
 
     
-    <link href="/css/nucleus.css?1784533660" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784533660" rel="stylesheet">
-    <link href="/css/hybrid.css?1784533660" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784533660" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784533660" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784533660" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784533660" rel="stylesheet">
-    <link href="/css/theme.css?1784533660" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784533660" rel="stylesheet">
+    <link href="/css/nucleus.css?1784533516" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784533516" rel="stylesheet">
+    <link href="/css/hybrid.css?1784533516" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784533516" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784533516" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784533516" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784533516" rel="stylesheet">
+    <link href="/css/theme.css?1784533516" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784533516" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784533660" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784533516" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784533660"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784533516"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -40,7 +40,7 @@
     
 
   </head>
-  <body class="" data-url="/5-workshop/5.4-backend-deployment/">
+  <body class="" data-url="/5-workshop/5.4-backend-deployment/5.4.8-automating-lambda-deployment-with-codepipeline/">
     <nav
   id="sidebar"
   class="showVisitedLinks"
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784533660"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784533660"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784533516"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784533516"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784533660"></script>
+<script type="text/javascript" src="/js/search.js?1784533516"></script>
  
   </div>
 
@@ -799,8 +799,8 @@
   data-nav-id="/5-workshop/5.4-backend-deployment/"
   title="Access S3 from on-premises"
   class="dd-item 
+        parent
         
-        active
         
         "
 >
@@ -937,6 +937,24 @@
   </a>
    
 </li>
+    
+            
+<li
+  data-nav-id="/5-workshop/5.4-backend-deployment/5.4.8-automating-lambda-deployment-with-codepipeline/"
+  title=""
+  class="dd-item 
+        
+        active
+        
+        "
+>
+  <a href="/5-workshop/5.4-backend-deployment/5.4.8-automating-lambda-deployment-with-codepipeline/">
+     
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
      
   </ul>
   
@@ -1052,7 +1070,7 @@
                        
                 <option
                   id="en"
-                  value="http://localhost:16883/5-workshop/5.4-backend-deployment/"
+                  value="http://localhost:16883/5-workshop/5.4-backend-deployment/5.4.8-automating-lambda-deployment-with-codepipeline/"
                   selected
                 >
                   English
@@ -1060,7 +1078,7 @@
                             
                 <option
                   id="vi"
-                  value="http://localhost:16883/vi/5-workshop/5.4-backend-deployment/"
+                  value="http://localhost:16883/vi/5-workshop/5.4-backend-deployment/5.4.8-automating-lambda-deployment-with-codepipeline/"
                 >
                   Tiếng Việt
                 </option>
@@ -1153,7 +1171,13 @@
             
           
           
-            <a href='/'>Internship Report</a> > <a href='/5-workshop/'>Workshop</a> > Access S3 from on-premises
+            
+            
+          
+          
+            <a href='/'>Internship Report</a> > <a href='/5-workshop/'>Workshop</a> > <a href='/5-workshop/5.4-backend-deployment/'>Access S3 from on-premises</a> > 
+          
+        
           
         
           
@@ -1165,15 +1189,7 @@
                 </div>
                 
                     <div class="progress">
-  <div class="wrapper"><nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
+  <div class="wrapper"><nav id="TableOfContents"></nav></div>
 </div>
 
                 
@@ -1188,7 +1204,7 @@
           
             <h1>
               
-              Access S3 from on-premises
+              
             </h1>
           
 
@@ -1196,21 +1212,7 @@
 
 
 
-	<h4 id="overview">Overview</h4>
-<ul>
-<li>
-<p>In this section, you will create an Interface endpoint to access Amazon S3 from a simulated on-premises environment. The Interface endpoint will allow you to route to Amazon S3 over a VPN connection from your simulated on-premises environment.</p>
-</li>
-<li>
-<p>Why using <strong>Interface endpoint</strong>:</p>
-<ul>
-<li>Gateway endpoints only work with resources running in the VPC where they are created. Interface endpoints work with resources running in VPC, and also resources running in on-premises environments. Connectivty from your on-premises environment to the cloud can be provided by AWS Site-to-Site VPN or AWS Direct Connect.</li>
-<li>Interface endpoints allow you to connect to services powered by AWS PrivateLink. These services include some AWS services, services hosted by other AWS customers and partners in their own VPCs (referred to as PrivateLink Endpoint Services), and supported AWS Marketplace Partner services. For this workshop, we will focus on connecting to Amazon S3.</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/5-Workshop/5.4-S3-onprem/diagram3.png" alt="Interface endpoint architecture"></p>
-
+	
 
 
 
@@ -2018,6 +2020,23 @@
             
         
                     
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
             
         
                     
@@ -2025,6 +2044,9 @@
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -2097,10 +2119,10 @@
 	 
 	 
 		
-			<a class="nav nav-prev" href="/5-workshop/5.3-frontend-deployment/5.3.7-codepipeline-to-s3-frontend/" title=""> <i class="fa fa-chevron-left"></i></a>
+			<a class="nav nav-prev" href="/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/" title=""> <i class="fa fa-chevron-left"></i></a>
 		
 		
-			<a class="nav nav-next" href="/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/" title="Prepare the environment" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+			<a class="nav nav-next" href="/5-workshop/5.5-system-testing/" title="VPC Endpoint Policies" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
 		
 	
     </div>
@@ -2110,19 +2132,19 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784533661"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784533661"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784533661"></script>
-    <script src="/js/jquery.sticky.js?1784533661"></script>
-    <script src="/js/featherlight.min.js?1784533661"></script>
-    <script src="/js/highlight.pack.js?1784533661"></script>
+    <script src="/js/clipboard.min.js?1784533516"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784533516"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784533516"></script>
+    <script src="/js/jquery.sticky.js?1784533516"></script>
+    <script src="/js/featherlight.min.js?1784533516"></script>
+    <script src="/js/highlight.pack.js?1784533516"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784533661"></script>
-    <script src="/js/learn.js?1784533661"></script>
-    <script src="/js/hugo-learn.js?1784533661"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784533516"></script>
+    <script src="/js/learn.js?1784533516"></script>
+    <script src="/js/hugo-learn.js?1784533516"></script>
 
-    <link href="/mermaid/mermaid.css?1784533661" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784533661"></script>
+    <link href="/mermaid/mermaid.css?1784533516" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784533516"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

@@ -1,5 +1,5 @@
 ---
-title : "Viết Frontend gọi API Gateway"
+title : "Tự động triển khai Lambda bằng CodePipeline"
 date : 2024-01-01
 weight : 7
 chapter : false

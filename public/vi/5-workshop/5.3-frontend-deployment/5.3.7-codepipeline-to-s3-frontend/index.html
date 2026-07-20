@@ -15,21 +15,21 @@
     <title>Tự động triển khai bằng CodePipeline (GitHub → S3) :: Báo cáo thực tập</title>
 
     
-    <link href="/css/nucleus.css?1784531440" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784531440" rel="stylesheet">
-    <link href="/css/hybrid.css?1784531440" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784531440" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784531440" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784531440" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784531440" rel="stylesheet">
-    <link href="/css/theme.css?1784531440" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784531440" rel="stylesheet">
+    <link href="/css/nucleus.css?1784533661" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784533661" rel="stylesheet">
+    <link href="/css/hybrid.css?1784533661" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784533661" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784533661" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784533661" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784533661" rel="stylesheet">
+    <link href="/css/theme.css?1784533661" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784533661" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784531440" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784533661" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784531440"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784533661"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784531440"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784531440"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784533661"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784533661"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/\/vi";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784531440"></script>
+<script type="text/javascript" src="/js/search.js?1784533661"></script>
  
   </div>
 
@@ -869,7 +869,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
-  title="Mô phỏng On-premises DNS "
+  title="Tạo AWS Lambda"
   class="dd-item 
         
         
@@ -877,7 +877,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/">
-     <b> 5.4.4 </b> Mô phỏng On-premises DNS  
+     <b> 5.4.4 </b> Tạo AWS Lambda 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -887,7 +887,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
-  title="Tạo AWS Lambda"
+  title="Tạo API Gateway"
   class="dd-item 
         
         
@@ -895,7 +895,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/">
-     <b> 5.4.5 </b> Tạo AWS Lambda 
+     <b> 5.4.5 </b> Tạo API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -905,7 +905,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-  title="Tạo API Gateway"
+  title="Viết Frontend gọi API Gateway"
   class="dd-item 
         
         
@@ -913,7 +913,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/">
-     <b> 5.4.6 </b> Tạo API Gateway 
+     <b> 5.4.6 </b> Viết Frontend gọi API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -923,7 +923,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/"
-  title="Viết Frontend gọi API Gateway"
+  title="Tự động triển khai Lambda bằng CodePipeline"
   class="dd-item 
         
         
@@ -931,7 +931,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/">
-     <b> 5.4.7 </b> Viết Frontend gọi API Gateway 
+     <b> 5.4.7 </b> Tự động triển khai Lambda bằng CodePipeline 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -1389,70 +1389,52 @@
 </ul>
 <h3 id="3-tạo-invalidation-thủ-công-cho-cloudfront">3. Tạo Invalidation thủ công cho Cloudfront</h3>
 <ul>
-<li>
-<p>Trong trang cloudfront:</p>
+<li>Trong trang cloudfront:
 <ul>
 <li>Chọn tab <em><strong>Invalidations</strong></em></li>
 <li>Chọn <em><strong>Create invalidations</strong></em>
 <img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/tab-invalidation.png" alt="tab-invalidation"></li>
 </ul>
 </li>
-<li>
-<p>Trong giao diện Create invalidation:</p>
+<li>Trong giao diện Create invalidation:
 <ul>
-<li>
-<p>Selection method: Chọn <strong>By paths</strong></p>
-</li>
-<li>
-<p>Object paths to invalidation: Nhập <code>/*</code></p>
-</li>
-<li>
-<p>Sau đó nhấn <strong>Create invalidation</strong></p>
-</li>
-<li>
-<p>Thông báo tạo invalidation thành công</p>
-</li>
+<li>Selection method: Chọn <strong>By paths</strong></li>
+<li>Object paths to invalidation: Nhập <code>/*</code></li>
+<li>Sau đó nhấn <strong>Create invalidation</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-invalidation.png" alt="create-invalidation"></li>
+<li>Thông báo tạo invalidation thành công
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-invalidation-success.png" alt="create-invalidation-success"></li>
 </ul>
 </li>
-<li>
-<p>Tại giao diện Cloudfront, kiểm tra lại origin path đã được cập nhật</p>
-</li>
+<li>Tại giao diện Cloudfront, kiểm tra lại origin path đã được cập nhật
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/origin-path-updated.png" alt="origin-path-updated"></li>
 </ul>
 <h3 id="4-tạo-invalidation-tự-động-cho-cloudfront">4. Tạo Invalidation tự động cho Cloudfront</h3>
 <p>Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role</p>
 <ul>
-<li>
-<p>Truy cập distribution của Cloudfront và copy ID</p>
-</li>
-<li>
-<p>Tìm kiếm <code>IAM</code> trong công cụ tìm kiếm <strong>AWS Console</strong></p>
-</li>
-<li>
-<p>Trong giao diện IAM:</p>
+<li>Truy cập distribution của Cloudfront và copy ID
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/distribution-id.png" alt="distribution-id"></li>
+<li>Tìm kiếm <code>IAM</code> trong công cụ tìm kiếm <strong>AWS Console</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/find-IAM.png" alt="find-IAM"></li>
+<li>Trong giao diện IAM:
 <ul>
 <li>Chọn <strong>Roles</strong></li>
-<li>Chọn <strong>Role name codebuild-smartdocsai-fe-build-service-role</strong></li>
+<li>Chọn <strong>Role name codebuild-smartdocsai-fe-build-service-role</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/role-name.png" alt="role-name"></li>
 </ul>
 </li>
-<li>
-<p>Trong Role name vừa chọn:</p>
+<li>Trong Role name vừa chọn:
 <ul>
-<li>
-<p>Chọn <strong>add permissions</strong></p>
-</li>
-<li>
-<p>Chọn <strong>Create inline policy</strong></p>
-</li>
+<li>Chọn <strong>add permissions</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/permission-tab.png" alt="permission-tab"></li>
+<li>Chọn <strong>Create inline policy</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-inline-policy.png" alt="create-inline-policy"></li>
 </ul>
 </li>
-<li>
-<p>Trong giao diện Specify permissons:</p>
+<li>Trong giao diện Specify permissons:
 <ul>
-<li>
-<p>Chọn <strong>JSON</strong></p>
-</li>
-<li>
-<p>Nhập đoạn mã sau nào Policy editor</p>
+<li>Chọn <strong>JSON</strong></li>
+<li>Nhập đoạn mã sau nào Policy editor
 <pre tabindex="0"><code>    &#34;Version&#34;: &#34;2012-10-17&#34;,
     &#34;Statement&#34;: [
         {
@@ -1463,23 +1445,23 @@
     ]
 }```
 </code></pre></li>
-<li>
-<p>Cuộn xuống cuối trang, nhấn <strong>Next</strong></p>
-</li>
 </ul>
 </li>
-<li>
-<p>Trong giao diện Review and create:</p>
+</ul>
+<p><img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission.png" alt="specify-permission"></p>
+<ul>
+<li>Cuộn xuống cuối trang, nhấn <strong>Next</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission-next.png" alt="specify-permission-next"></li>
+<li>Trong giao diện Review and create:
 <ul>
 <li>Policy name: Nhập <code>AllowCloudfrontInvalidatio</code></li>
-<li>Sau đó, nhấn <strong>Create policy</strong></li>
+<li>Sau đó, nhấn <strong>Create policy</strong>
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/review-and-create-policy.png" alt="review-and-create-policy"></li>
 </ul>
 </li>
-<li>
-<p>Xong bước này, role đã có quyền tạo invalidation.</p>
-</li>
-<li>
-<p>Sửa <strong>buildspec.yml</strong> trong repo — thêm lệnh invalidation</p>
+<li>Xong bước này, role đã có quyền tạo invalidation.
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/policy-invalidation-success.png" alt="policy-invalidation-success"></li>
+<li>Sửa <strong>buildspec.yml</strong> trong repo — thêm lệnh invalidation
 <pre tabindex="0"><code class="language-version:" data-lang="version:">
 
 phases:
@@ -1508,24 +1490,19 @@ files:
 </ul>
 <h3 id="5-kiểm-tra-website-với-codepipeline">5. Kiểm tra website với CodePipeline</h3>
 <ul>
-<li>
-<p>Truy cập Cloudfront và copy Distribution domain name</p>
-</li>
-<li>
-<p>Dán URL vào tab mới trình duyệt</p>
+<li>Truy cập Cloudfront và copy Distribution domain name
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/copy-cloudfront-domain.png" alt="copy-cloudfront-domain"></li>
+<li>Dán URL vào tab mới trình duyệt
 <ul>
-<li>Khi này hãy để ý chữ <strong>“Đăng ký ngay”</strong> trong form đăng nhập</li>
+<li>Khi này hãy để ý chữ <strong>“Đăng ký ngay”</strong> trong form đăng nhập
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/before-fe.png" alt="before-fe"></li>
 </ul>
 </li>
-<li>
-<p>Tiến hành sửa code từ <strong>“Đăng ký ngay”</strong> thành <strong>“Đăng ký ngay!” (Thêm dấu !)</strong></p>
-</li>
-<li>
-<p>Sau đó push code lên Github</p>
-</li>
-<li>
-<p>Đợi 1 lúc để CodePipeline deploy lại, ta sẽ thấy giao diện đã được cập nhật theo code mới</p>
-</li>
+<li>Tiến hành sửa code từ <strong>“Đăng ký ngay”</strong> thành <strong>“Đăng ký ngay!” (Thêm dấu !)</strong></li>
+<li>Sau đó push code lên Github
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/code-edit.png" alt="code-edit"></li>
+<li>Đợi 1 lúc để CodePipeline deploy lại, ta sẽ thấy giao diện đã được cập nhật theo code mới
+<img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/after-fe.png" alt="after-fe"></li>
 </ul>
 
 
@@ -2431,19 +2408,19 @@ files:
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784531440"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784531440"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784531440"></script>
-    <script src="/js/jquery.sticky.js?1784531440"></script>
-    <script src="/js/featherlight.min.js?1784531440"></script>
-    <script src="/js/highlight.pack.js?1784531440"></script>
+    <script src="/js/clipboard.min.js?1784533661"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784533661"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784533661"></script>
+    <script src="/js/jquery.sticky.js?1784533661"></script>
+    <script src="/js/featherlight.min.js?1784533661"></script>
+    <script src="/js/highlight.pack.js?1784533661"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784531440"></script>
-    <script src="/js/learn.js?1784531440"></script>
-    <script src="/js/hugo-learn.js?1784531440"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784533661"></script>
+    <script src="/js/learn.js?1784533661"></script>
+    <script src="/js/hugo-learn.js?1784533661"></script>
 
-    <link href="/mermaid/mermaid.css?1784531440" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784531440"></script>
+    <link href="/mermaid/mermaid.css?1784533661" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784533661"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

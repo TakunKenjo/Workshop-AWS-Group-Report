@@ -1,5 +1,5 @@
 ---
-title : "Tạo API Gateway"
+title : "Viết Frontend gọi API Gateway"
 date : 2024-01-01
 weight : 6
 chapter : false

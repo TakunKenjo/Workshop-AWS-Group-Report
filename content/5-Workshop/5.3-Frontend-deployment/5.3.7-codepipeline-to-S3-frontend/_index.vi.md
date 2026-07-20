@@ -134,27 +134,26 @@ pre : " <b> 5.3.7. </b> "
   - Selection method: Chọn **By paths**
   - Object paths to invalidation: Nhập ```/*```
   - Sau đó nhấn **Create invalidation**
-
+![create-invalidation](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-invalidation.png)
   - Thông báo tạo invalidation thành công
-
+![create-invalidation-success](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-invalidation-success.png)
 - Tại giao diện Cloudfront, kiểm tra lại origin path đã được cập nhật
-
-
+![origin-path-updated](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/origin-path-updated.png)
 ### 4. Tạo Invalidation tự động cho Cloudfront
 Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
 - Truy cập distribution của Cloudfront và copy ID
-
+![distribution-id](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/distribution-id.png)
 - Tìm kiếm ```IAM``` trong công cụ tìm kiếm **AWS Console**
-
+![find-IAM](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/find-IAM.png)
 - Trong giao diện IAM:
   - Chọn **Roles**
   - Chọn **Role name codebuild-smartdocsai-fe-build-service-role**
-
+![role-name](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/role-name.png)
 - Trong Role name vừa chọn:
   - Chọn **add permissions**
-
+![permission-tab](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/permission-tab.png)
   - Chọn **Create inline policy**
-
+![create-inline-policy](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/create-inline-policy.png)
 - Trong giao diện Specify permissons:
   - Chọn **JSON**
   - Nhập đoạn mã sau nào Policy editor
@@ -168,16 +167,15 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
             }
         ]
     }```
-
-
+![specify-permission](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission.png)
   - Cuộn xuống cuối trang, nhấn **Next**
-
+![specify-permission-next](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission-next.png)
 - Trong giao diện Review and create:
   - Policy name: Nhập ```AllowCloudfrontInvalidatio```
   - Sau đó, nhấn **Create policy**
-
+![review-and-create-policy](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/review-and-create-policy.png)
 - Xong bước này, role đã có quyền tạo invalidation. 
-
+![policy-invalidation-success](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/policy-invalidation-success.png)
 - Sửa **buildspec.yml** trong repo — thêm lệnh invalidation 
     ```version: 0.2
 
@@ -208,12 +206,12 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
 
 ### 5. Kiểm tra website với CodePipeline
 - Truy cập Cloudfront và copy Distribution domain name
-
+![copy-cloudfront-domain](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/copy-cloudfront-domain.png)
 - Dán URL vào tab mới trình duyệt
   - Khi này hãy để ý chữ **“Đăng ký ngay”** trong form đăng nhập
-
+![before-fe](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/before-fe.png)
 - Tiến hành sửa code từ **“Đăng ký ngay”** thành **“Đăng ký ngay!” (Thêm dấu !)**
 - Sau đó push code lên Github
-
-
+![code-edit](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/code-edit.png)
 - Đợi 1 lúc để CodePipeline deploy lại, ta sẽ thấy giao diện đã được cập nhật theo code mới
+![after-fe](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/after-fe.png)
