@@ -15,21 +15,21 @@
     <title>Tự động triển khai bằng CodePipeline (GitHub → S3) :: Báo cáo thực tập</title>
 
     
-    <link href="/css/nucleus.css?1784533661" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784533661" rel="stylesheet">
-    <link href="/css/hybrid.css?1784533661" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784533661" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784533661" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784533661" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784533661" rel="stylesheet">
-    <link href="/css/theme.css?1784533661" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784533661" rel="stylesheet">
+    <link href="/css/nucleus.css?1784537605" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784537605" rel="stylesheet">
+    <link href="/css/hybrid.css?1784537605" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784537605" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784537605" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784537605" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784537605" rel="stylesheet">
+    <link href="/css/theme.css?1784537605" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784537605" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784533661" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784537605" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784533661"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784537605"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784533661"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784533661"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784537605"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784537605"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/\/vi";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784533661"></script>
+<script type="text/javascript" src="/js/search.js?1784537605"></script>
  
   </div>
 
@@ -1435,7 +1435,8 @@
 <ul>
 <li>Chọn <strong>JSON</strong></li>
 <li>Nhập đoạn mã sau nào Policy editor
-<pre tabindex="0"><code>    &#34;Version&#34;: &#34;2012-10-17&#34;,
+<pre tabindex="0"><code>{
+    &#34;Version&#34;: &#34;2012-10-17&#34;,
     &#34;Statement&#34;: [
         {
             &#34;Effect&#34;: &#34;Allow&#34;,
@@ -1443,7 +1444,7 @@
             &#34;Resource&#34;: &#34;arn:aws:cloudfront::623035187993:distribution/E5QRZJSUK0QTJ&#34;
         }
     ]
-}```
+}
 </code></pre></li>
 </ul>
 </li>
@@ -1462,7 +1463,8 @@
 <li>Xong bước này, role đã có quyền tạo invalidation.
 <img src="/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/policy-invalidation-success.png" alt="policy-invalidation-success"></li>
 <li>Sửa <strong>buildspec.yml</strong> trong repo — thêm lệnh invalidation
-<pre tabindex="0"><code class="language-version:" data-lang="version:">
+<pre tabindex="0"><code>version: 0.2
+
 
 phases:
 install:
@@ -1485,7 +1487,7 @@ post_build:
 artifacts:
 base-directory: smart-docs-ai/smart-docs-ai/dist
 files:
-    - &#39;**/*&#39;```
+    - &#39;**/*&#39;
 </code></pre></li>
 </ul>
 <h3 id="5-kiểm-tra-website-với-codepipeline">5. Kiểm tra website với CodePipeline</h3>
@@ -2408,19 +2410,19 @@ files:
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784533661"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784533661"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784533661"></script>
-    <script src="/js/jquery.sticky.js?1784533661"></script>
-    <script src="/js/featherlight.min.js?1784533661"></script>
-    <script src="/js/highlight.pack.js?1784533661"></script>
+    <script src="/js/clipboard.min.js?1784537605"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784537605"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784537605"></script>
+    <script src="/js/jquery.sticky.js?1784537605"></script>
+    <script src="/js/featherlight.min.js?1784537605"></script>
+    <script src="/js/highlight.pack.js?1784537605"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784533661"></script>
-    <script src="/js/learn.js?1784533661"></script>
-    <script src="/js/hugo-learn.js?1784533661"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784537605"></script>
+    <script src="/js/learn.js?1784537605"></script>
+    <script src="/js/hugo-learn.js?1784537605"></script>
 
-    <link href="/mermaid/mermaid.css?1784533661" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784533661"></script>
+    <link href="/mermaid/mermaid.css?1784537605" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784537605"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

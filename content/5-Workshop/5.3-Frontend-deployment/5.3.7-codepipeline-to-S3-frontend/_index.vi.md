@@ -157,7 +157,8 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
 - Trong giao diện Specify permissons:
   - Chọn **JSON**
   - Nhập đoạn mã sau nào Policy editor
-    ```{
+    ```
+    {
         "Version": "2012-10-17",
         "Statement": [
             {
@@ -166,7 +167,8 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
                 "Resource": "arn:aws:cloudfront::623035187993:distribution/E5QRZJSUK0QTJ"
             }
         ]
-    }```
+    }
+    ```
 ![specify-permission](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission.png)
   - Cuộn xuống cuối trang, nhấn **Next**
 ![specify-permission-next](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/specify-permission-next.png)
@@ -177,7 +179,8 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
 - Xong bước này, role đã có quyền tạo invalidation. 
 ![policy-invalidation-success](/images/5-Workshop/5.3-Frontend-deployment/5.3.7-codepipeline-to-S3-frontend/policy-invalidation-success.png)
 - Sửa **buildspec.yml** trong repo — thêm lệnh invalidation 
-    ```version: 0.2
+    ```
+    version: 0.2
 
 
     phases:
@@ -201,7 +204,8 @@ Bước này sẽ gán quyền cloudfront: CreateInvalidation cho Service role
     artifacts:
     base-directory: smart-docs-ai/smart-docs-ai/dist
     files:
-        - '**/*'```
+        - '**/*'
+    ```
 
 
 ### 5. Kiểm tra website với CodePipeline
