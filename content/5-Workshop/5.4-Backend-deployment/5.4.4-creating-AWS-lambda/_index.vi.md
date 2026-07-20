@@ -1,5 +1,5 @@
 ---
-title : "Mô phỏng On-premises DNS "
+title : "Tạo AWS Lambda"
 date : 2024-01-01
 weight : 4
 chapter : false
