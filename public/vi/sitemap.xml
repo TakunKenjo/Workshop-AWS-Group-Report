@@ -535,6 +535,19 @@
                 href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/"
                 />
   </url><url>
+    <loc>http://localhost:1313/vi/5-workshop/5.1-workshop-overview/5.1.5--ui-function/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/5-workshop/5.1-workshop-overview/5.1.5--ui-function/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="http://localhost:1313/vi/5-workshop/5.1-workshop-overview/5.1.5--ui-function/"
+                />
+  </url><url>
     <loc>http://localhost:1313/vi/5-workshop/5.5-system-testing/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
     <xhtml:link

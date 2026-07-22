@@ -54,6 +54,19 @@
                 href="http://localhost:1313/vi/5-workshop/5.3-frontend-deployment/5.3.1-create-s3-bucket/"
                 />
   </url><url>
+    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/"
+                />
+  </url><url>
     <loc>http://localhost:1313/4-eventparticipated/4.1-event1/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -104,19 +117,6 @@
                 rel="alternate"
                 hreflang="vi"
                 href="http://localhost:1313/vi/5-workshop/5.1-workshop-overview/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.1-creating-amazon-cognito/"
                 />
   </url><url>
     <loc>http://localhost:1313/1-worklog/1.1-week1/</loc>
@@ -392,6 +392,19 @@
                 href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/"
                 />
   </url><url>
+    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
+                />
+  </url><url>
     <loc>http://localhost:1313/4-eventparticipated/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -405,17 +418,30 @@
                 href="http://localhost:1313/vi/4-eventparticipated/"
                 />
   </url><url>
-    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/</loc>
+    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
+                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="vi"
-                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
+                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/5-workshop/5.1-workshop-overview/5.1.5--ui-function/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/5-workshop/5.1-workshop-overview/5.1.5--ui-function/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="http://localhost:1313/vi/5-workshop/5.1-workshop-overview/5.1.5--ui-function/"
                 />
   </url><url>
     <loc>http://localhost:1313/5-workshop/5.5-system-testing/</loc>
@@ -625,18 +651,6 @@
                 rel="alternate"
                 hreflang="vi"
                 href="http://localhost:1313/vi/5-workshop/5.3-frontend-deployment/5.3.7-codepipeline-to-s3-frontend/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="http://localhost:1313/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
                 />
   </url><url>
     <loc>http://localhost:1313/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/</loc>
