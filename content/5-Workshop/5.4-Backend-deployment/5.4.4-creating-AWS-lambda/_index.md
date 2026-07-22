@@ -1,111 +1,229 @@
 ---
-title : "On-premises DNS Simulation"
-date : 2024-01-01
+title : "Creating AWS Lambda Engine"
+date : 2024-01-01 
 weight : 4
 chapter : false
 pre : " <b> 5.4.4 </b> "
 ---
 
-AWS PrivateLink endpoints have a fixed IP address in each Availability Zone where they are deployed, for the life of the endpoint (until it is deleted). These IP addresses are attached to Elastic Network Interfaces (ENIs). AWS recommends using DNS to resolve the IP addresses for endpoints so that downstream applications use the latest IP addresses when ENIs are added to new AZs, or deleted over time.
+### 1. Install Docker Desktop
 
-In this section, you will create a forwarding rule to send DNS resolution requests from a simulated on-premises environment to a Route 53 Private Hosted Zone. This section leverages the infrastructure deployed by CloudFormation in the Prepare the environment section.
+#### 1.1. Requirements
+- **Operating System: Windows 10 (64-bit: Home, Pro, Enterprise Build 19041 or higher) or Windows 11.**
+- **Hardware Virtualization Enabled: Intel VT-x or AMD-V enabled in BIOS/UEFI.**
+- **RAM: Minimum 4 GB (8 GB – 16 GB recommended).**
+- **Free Disk Space: Minimum 10 GB.**
 
-#### Create DNS Alias Records for the Interface endpoint
-1. Navigate to the [Route 53 management console](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) (Hosted Zones section).  The CloudFormation template you deployed in the Prepare the environment section created this Private Hosted Zone. Click on the name of the Private Hosted Zone, s3.us-east-1.amazonaws.com:
+#### 1.2. Enable WSL 2 (WINDOWS SUBSYSTEM FOR LINUX 2)
+Docker Desktop on Windows leverages the WSL 2 Engine for native Linux container performance.
 
-![hosted zone](/images/5-Workshop/5.4-S3-onprem/hosted-zone.png)
-
-2. Create a new record in the Private Hosted Zone:
-
-![Create record](/images/5-Workshop/5.4-S3-onprem/create-record1.png)
-
-+ Record name and record type keep default options
-+ Alias Button: Click to enable
-+ Route traffic to: Alias to VPC Endpoint
-+ Region: US East (N. Virginia) [us-east-1]
-+ Choose endpoint: Paste the Regional VPC Endpoint DNS name from your text editor (you saved when doing section 4.3)
-
-![record1](/images/5-Workshop/5.4-S3-onprem/record1.png)
-
-3. Click Add another record, and add a second record using the following values. Click Create records when finished to create both records.
-+ Record name: *.
-+ Record type: keep default value (type A)
-+ Alias Button: Click to enable
-+ Route traffic to: Alias to VPC Endpoint
-+ Region: US East (N. Virginia) [us-east-1]
-+ Choose endpoint: Paste the Regional VPC Endpoint DNS name from your text editor
-
-![record 2](/images/5-Workshop/5.4-S3-onprem/record2.png)
-
-The new records appear in the Route 53 console:
-
-![result](/images/5-Workshop/5.4-S3-onprem/result.png)
-
-#### Create a Resolver Forwarding Rule
-
-Route 53 Resolver Forwarding Rules allow you to forward DNS queries from your VPC to other sources for name resolution. Outside of a workshop environment, you might use this feature to forward DNS queries from your VPC to DNS servers running on-premises. In this section, you will simulate an on-premises conditional forwarder by creating a forwarding rule that forwards DNS queries for Amazon S3 to a Private Hosted Zone running in "VPC Cloud" in-order to resolve the PrivateLink interface endpoint regional DNS name.
-
-1. From the Route 53 management console, click **Inbound endpoints** on the left side bar
-2. In the Inbound endpoints console, click the ID of the inbound endpoint
-
-![Inbound endpoint](/images/5-Workshop/5.4-S3-onprem/route53-1.png)
-
-3. Copy the two IP addresses listed to your text editor
-
-![Ip addresses](/images/5-Workshop/5.4-S3-onprem/route53-2.png)
-
-4. From the Route 53 menu, choose **Resolver** > **Rules**, and click **Create rule**:
-
-![Ip addresses](/images/5-Workshop/5.4-S3-onprem/route53-3.png)
-
-5. In the Create rule console:
-+ Name: myS3Rule
-+ Rule type: Forward
-+ Domain name: s3.us-east-1.amazonaws.com
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-4.png)
-
-+ VPC: VPC On-prem
-+ Outbound endpoint: VPCOnpremOutboundEndpoint
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-5.png)
-
-+ Target IP Addresses: Enter both IP addresses from your text editor (inbound endpoint addresses) and then click Submit
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-6.png)
-You have successfully created resolver forwarding rule. 
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-7.png)
-
-#### Test the on-premises DNS Simulation
-
-1. Connect to **Test-Interface-Endpoint EC2 instance** with **Session manager**
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/test1.png)
-
-2. Test DNS resolution. The dig command will return the IP addresses assigned to the VPC Interface endpoint running in VPC Cloud (your IP's will be different): dig +short s3.us-east-1.amazonaws.com 
-
-{{% notice note %}}
-The IP addresses returned are the VPC endpoint IP addresses, NOT the Resolver IP addresses you pasted from your text editor. The IP addresses of the Resolver endpoint and the VPC endpoint look similar because they are all from the VPC Cloud CIDR block.
-{{% /notice %}}
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/dig.png)
+##### 1.2.1. Open PowerShell with Administrator privileges (Run as Administrator)
 
 
-3. Navigate to the VPC menu (Endpoints section), select the S3 Interface endpoint. Click the Subnets tab and verify that the IP addresses returned by Dig match the VPC endpoint:
+![image29.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image29.png)
 
-![create rule](/images/5-Workshop/5.4-S3-onprem/subnet.png)
 
-4. Return to your shell and use the AWS CLI to test listing your S3 buckets:
+##### 1.2.2. Run command to enable WSL and Virtual Machine Platform features
 
-```
-aws s3 ls --endpoint-url https://s3.us-east-1.amazonaws.com
-```
 
-![create rule](/images/5-Workshop/5.4-S3-onprem/endpoint.png)
+![image30.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image30.png)
 
-5. Terminate your Session Manager session:
 
-![create rule](/images/5-Workshop/5.4-S3-onprem/terminal.png)
+##### 1.2.3. Restart your computer
 
-In this section you created an Interface endpoint for Amazon S3. This endpoint can be reached from on-premises through Site-to-Site VPN or AWS Direct Connect. Route 53 Resolver outbound endpoints simulated forwarding DNS requests from on-premises to a Private Hosted Zone running the cloud. Route 53 inbound Endpoints recieved the resolution request and returned a response containing the IP addresses of the VPC interface endpoint. Using DNS to resolve the endpoint IP addresses provides high availability in-case of an Availability Zone outage.
+##### 1.2.4. Reopen PowerShell (Admin) and set WSL 2 as the default version
+
+
+![image31.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image31.png)
+
+
+#### 1.3. Download and Install official Docker Desktop
+
+##### 1.3.1. Access official Docker website: https://www.docker.com/products/docker-desktop/
+
+
+![image32.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image32.png)
+
+
+##### 1.3.2. Click "Download for Windows" to download `Docker Desktop Installer.exe`
+
+##### 1.3.3. Open the downloaded `.exe` file to proceed with installation:
+- Check "Use WSL 2 instead of Hyper-V (recommended)".
+- Check "Add shortcut to desktop".
+- Click OK and wait for file extraction to finish.
+
+##### 1.3.4. Click "Close and restart" to apply system changes.
+
+#### 1.4. Initial Launch and Configuration of Docker Desktop
+
+##### 1.4.1. Open Docker Desktop application
+
+
+![image33.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image33.png)
+
+
+##### 1.4.2. Select Accept to agree to Subscription Service Agreement terms.
+
+##### 1.4.3. In main Docker Desktop UI, select Settings (Gear icon) ➔ General:
+- Ensure "Use the WSL 2 based engine" is checked.
+
+
+![image34.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image34.png)
+
+
+##### 1.4.4. Observe bottom-left corner of UI: Green Docker icon with "Engine Running" text indicates Docker is ready.
+
+
+![image35.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image35.png)
+
+
+### 2. Write and Optimize Dockerfile
+
+
+![image36.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image36.png)
+
+
+### 3. Create Amazon ECR Repository (via AWS CLI)
+
+Open PowerShell and execute command:
+
+
+![image37.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image37.png)
+
+
+### 4. Authenticate Docker CLI to Amazon ECR (AUTHENTICATION)
+
+Since Amazon ECR requires temporary security token authentication (valid for 12 hours), fetch a temporary password from AWS ECR and pipe directly to Docker Login:
+
+
+![image38.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image38.png)
+
+
+Result: "Login Succeeded" confirms success.
+
+### 5. Build Docker Image and Push to Amazon ECR
+
+#### 5.1. Build Docker Image
+
+Enter command in Terminal:
+
+
+![image39.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image39.png)
+
+
+#### 5.2. Push Docker Image to ECR Repository
+
+
+![image40.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image40.png)
+
+
+### 6. Synchronize Docker Image with AWS Lambda
+
+Open terminal and enter CLI command to synchronize:
+
+
+![image41.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image41.png)
+
+
+Result:
+
+
+![image42.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image42.png)
+
+
+### 1. Develop Backend Mangum Handler & Configuration
+
+#### 1.1. Configure temporary storage path in `backend/config.py`
+
+AWS Lambda is Stateless and only permits writing temporary data to `/tmp`:
+
+
+![image43.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image43.png)
+
+
+#### 1.2. Create Mangum Handler in `backend/app_api.py`
+
+Use `Mangum` library to convert HTTP Requests from AWS API Gateway to FastAPI ASGI Format:
+
+
+![image44.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image44.png)
+
+
+### 2. Prepare DOCKERFILE for AWS Lambda
+
+Create lightweight `backend/Dockerfile` (~1.0 GB), excluding heavy PyTorch or model weights:
+
+
+![image45.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image45.png)
+
+
+### 3. Create IAM ROLE and Permissions for AWS Lambda
+
+Lambda requires interaction permissions with S3, DynamoDB, Bedrock, and CloudWatch.
+
+#### 3.1. Create Trust Policy (`trust-policy.json`):
+
+
+![image46.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image46.png)
+
+
+#### 3.2. Run AWS CLI commands to create Role and attach Managed Policies:
+
+
+![image47.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image47.png)
+
+
+### 4. Package Container & Push Docker Image to Amazon ECR
+
+
+![image48.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image48.png)
+
+
+### 5. Initialize AWS Lambda Function
+
+### 1. Open Terminal or PowerShell
+
+
+![image49.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image49.png)
+
+
+### 2. Initialize Lambda Function via AWS CLI
+
+#### 2.1. Create Lambda Function from ECR Container Image
+
+This function acts as Backend Core handling all API logic and AI RAG:
+
+
+![image50.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image50.png)
+
+
+Next, configure all 7 Environment Variables:
+
+
+![image51.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image51.png)
+
+
+Grant API Gateway permissions to invoke this Lambda function:
+
+
+![image52.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image52.png)
+
+
+#### 2.2. Create Lambda Function from Source Zip File
+
+This function serves as Cognito Pre Sign-up Trigger to clean unverified email users:
+
+
+![image53.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image53.png)
+
+
+Then grant Cognito User Pool permissions to invoke this Lambda function:
+
+
+![image54.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image54.png)
+
+
+Result:
+
+
+![image55.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image55.png)

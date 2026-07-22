@@ -1,59 +1,62 @@
 ---
-title : "Test the Interface Endpoint"
-date : 2024-01-01
+title : "Creating Amazon S3 for document storage"
+date : 2024-01-01 
 weight : 3
 chapter : false
 pre : " <b> 5.4.3 </b> "
 ---
 
-#### Get the regional DNS name of S3 interface endpoint
-1. From the Amazon VPC menu, choose Endpoints.
-
-2. Click the name of newly created endpoint: s3-interface-endpoint. Click details and save the regional DNS name of the endpoint (the first one) to your text-editor for later use. 
-
-![dns name](/images/5-Workshop/5.4-S3-onprem/dns.png)
+### 1. Declare Bucket Name and Region
 
 
-#### Connect to EC2 instance in "VPC On-prem"
-
-1. Navigate to **Session manager** by typing "session manager" in the search box 
-
-2. Click **Start Session**, and select the EC2 instance named **Test-Interface-Endpoint**. This EC2 instance is running in "VPC On-prem" and will be used to test connectivty to Amazon S3 through the Interface endpoint we just created. Session Manager will open a new browser tab with a shell prompt: **sh-4.2 $**
-
-![Start session](/images/5-Workshop/5.4-S3-onprem/start-session.png)
-
-3. Change to the ssm-user's home directory with command "cd ~"
-
-4. Create a file named testfile2.xyz
-```
-fallocate -l 1G testfile2.xyz
-```
-
-![user](/images/5-Workshop/5.4-S3-onprem/cli1.png)
+![image5.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image5.png)
 
 
-5. Copy file to the same S3 bucket we created in section 3.2
-
-```
-aws s3 cp --endpoint-url https://bucket.<Regional-DNS-Name> testfile2.xyz s3://<your-bucket-name>
-``` 
-+ This command requires the --endpoint-url parameter, because you need to use the endpoint-specific DNS name to access S3 using an Interface endpoint.
-+ Do not include the leading ' * ' when copying/pasting the regional DNS name.
-+ Provide your S3 bucket name created earlier
-
-![copy file](/images/5-Workshop/5.4-S3-onprem/cli2.png)
+### 2. Run Command to Create S3 Bucket
 
 
-Now the file has been added to your S3 bucket. Let check your S3 bucket in the next step.
-
-#### Check Object in S3 bucket
-
-1. Navigate to S3 console
-2. Click Buckets
-3. Click the name of your bucket and you will see testfile2.xyz has been added to your bucket
-
-![check bucket](/images/5-Workshop/5.4-S3-onprem/check-bucket.png)
+![image6.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image6.png)
 
 
+### 3. Configure CORS (Allow Frontend Direct Document Upload)
+
+#### 3.1. Define CORS configuration using PowerShell variables:
 
 
+![image7.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image7.png)
+
+
+#### 3.2. Run command to apply CORS policy:
+![image8.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image8.png)
+
+
+### 4. Configure IAM Role Permissions for AWS Lambda
+
+Ensure the IAM Role running the Lambda Function (e.g., `smartdocai-lambda-role`) has attached S3 access policy.
+
+Run command to attach `AmazonS3FullAccess` policy to the Lambda Role:
+
+
+![image9.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image9.png)
+
+
+Result:
+
+
+![image10.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image10.png)
+
+
+S3 Directory Structure:
+
+
+![image11.png](/images/5-Workshop/5.4-Backend-deployment/5.4.3-creating-amazon-S3-for-document-storage/image11.png)
+
+
+| No. | Directory (Prefix) | File Type | Description & Function |
+| --- | --- | --- | --- |
+| 1 | `uploads/{user_id}/` | `.pdf`, `.docx` | Stores original document files uploaded by users from the Frontend via Presigned URLs. |
+| 2 | `vectorstore/{user_id}/smartdoc_index/` | `index.faiss`, `index.pkl` | Stores FAISS Vector DB index converted from user documents, used for RAG search. |
+| 3 | `processed_files/` | `{user_id}.json` | Stores file management info (filename, page count, chunk count, s3_key) to display file lists on the Frontend. |
+| 4 | `chat_history/` | `{user_id}.json` | Stores complete Q&A chat history, AI answers, and source citations per user. |
+| 5 | `avatars/{user_id}/` | `.jpg`, `.png` | Stores user avatar images when image size > 300KB (if < 300KB, base64 is stored in DynamoDB). |
+| 6 | `metadata/` | `search_config.json` | Stores general RAG settings (`chunk_size`, `chunk_overlap`, Reranker/Self-RAG/Co-RAG toggle states). |
