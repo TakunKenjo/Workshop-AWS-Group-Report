@@ -1,118 +1,241 @@
 ---
-title : "Tạo AWS Lambda"
-date : 2024-01-01
+title : "Triển khai AWS Lambda Engine"
+date : 2024-01-01 
 weight : 4
 chapter : false
 pre : " <b> 5.4.4 </b> "
 ---
 
- AWS PrivateLink endpoint có một địa chỉ IP cố định trong từng AZ nơi chúng được triển khai, trong suốt thời gian tồn tại của endpoint (cho đến khi endpoint bị xóa). Các địa chỉ IP này được gắn vào Elastic network interface (ENI). AWS khuyến nghị sử dụng DNS để resolve địa chỉ IP cho endpoint để các ứng dụng downstream sử dụng địa chỉ IP mới nhất khi ENIs được thêm vào AZ mới hoặc bị xóa theo thời gian.
+### 1.Cài đặt Docker Desktop
 
-Trong phần này, bạn sẽ tạo một quy tắc chuyển tiếp (forwarding rule) để gửi các yêu cầu resolve DNS từ môi trường truyền thống (mô phỏng) đến Private Hosted Zone trên Route 53. Phần này tận dụng cơ sở hạ tầng do CloudFormation triển khai trong phần Chuẩn bị môi trường.
+#### 1.1.Yêu cầu
 
-#### Tạo DNS Alias Records cho Interface endpoint
-1. Click link để đi đến [Route 53 management console](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) (Hosted Zones section).  Mẫu CloudFormation mà bạn triển khai trong phần Chuẩn bị môi trường đã tạo Private Hosted Zone này. Nhấp vào tên của Private Hosted Zone, s3.us-east-1.amazonaws.com:
+Hệ điều hành: Windows 10 (64-bit: Home, Pro, Enterprise từ Build 19041 trở lên) hoặc Windows 11.
 
-![hosted zone](/images/5-Workshop/5.4-S3-onprem/hosted-zone.png)
+Bật Ảo hóa Phần cứng (Hardware Virtualization Enabled): Đã bật Intel VT-x hoặc AMD-V trong BIOS/UEFI.
 
-2. Tạo 1 record mới trong Private Hosted Zone:
+RAM: Tối thiểu 4 GB (Khuyên dùng 8 GB – 16 GB).
 
-![Create record](/images/5-Workshop/5.4-S3-onprem/create-record1.png)
+Dung lượng đĩa trống: Tối thiểu 10 GB.
 
-+ Giữ nguyên Record name và record type
-+ Alias Button: click để enable
-+ Route traffic to: Alias to VPC Endpoint
-+ Region: US East (N. Virginia) [us-east-1]
-+ Chọn endpoint: Paste tên (Regional VPC Endpoint DNS) bạn đã lưu lại ở phần 4.3
+#### 1.2.Kích hoạt tính năng WSL 2 ( WINDOWS SUBSYSTEM FOR LINUX 2)
 
-![record1](/images/5-Workshop/5.4-S3-onprem/record1.png)
+Docker Desktop trên Windows tận dụng WSL 2 Engine để đạt hiệu năng xử lý container Linux gốc tối ưu
 
-3. Click Add another record, và add 1 cái record thứ 2 sử dụng những thông số sau:
-+ Record name: *.
-+ Record type: giữ giá trị default (type A)
-+ Alias Button: Click để enable
-+ Route traffic to: Alias to VPC Endpoint
-+ Region: US East (N. Virginia) [us-east-1]
-+ Chọn endpoint: Paste tên (Regional VPC Endpoint DNS) bạn đã lưu lại ở phần 4.3
-+ Click **Create records** 
-
-![record 2](/images/5-Workshop/5.4-S3-onprem/record2.png)
-
-Record mới xuất hiện trên giao diện Route 53.
-
-![result](/images/5-Workshop/5.4-S3-onprem/result.png)
-
-#### Tạo một Resolver Forwarding Rule
-
-**Route 53 Resolver Forwarding Rules** cho phép bạn chuyển tiếp các DNS queries từ VPC của bạn đến các nguồn khác để resolve name. Bên ngoài môi trường workshop, bạn có thể sử dụng tính năng này để chuyển tiếp các DNS queries từ VPC của bạn đến các máy chủ DNS chạy trên on-premises. Trong phần này, bạn sẽ mô phỏng một on-premises conditional forwarder bằng cách tạo một forwarding rule để chuyển tiếp các DNS queries for Amazon S3 đến một Private Hosted Zone chạy trong "VPC Cloud" để resolve PrivateLink interface endpoint regional DNS name.
-
-1. Từ giao diện  **Route 53**, chọn **Inbound endpoints** trên thanh bên trái
-
-2. Trong giao diện **Inbound endpoint**, Chọn ID của Inbound endpoint.
-
-![Inbound endpoint](/images/5-Workshop/5.4-S3-onprem/route53-1.png)
-
-3. Sao chép 2 địa chỉ IP trong danh sách vào trình chỉnh sửa.
-
-![Ip addresses](/images/5-Workshop/5.4-S3-onprem/route53-2.png)
-
-4. Từ giao diện Route 53, chọn  **Resolver** > **Rules** và chọn **Create rule**
-
-![Ip addresses](/images/5-Workshop/5.4-S3-onprem/route53-3.png)
-
-5. Trong giao diện **Create rule**
-
-+ Name: myS3Rule
-+ Rule type: Forward
-+ Domain name: s3.us-east-1.amazonaws.com
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-4.png)
-
-+ VPC: VPC On-prem
-+ Outbound endpoint: VPCOnpremOutboundEndpoint
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-5.png)
-
-+ Target IP Addresses: điền cả hai IP bạn đã lưu trữ trên trình soạn thảo (inbound endpoint addresses) và sau đó chọn **Submit**
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-6.png)
-
-Bạn đã tạo thành công resolver forwarding rule. 
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/route53-7.png)
-
-#### Kiểm tra on-premises DNS mô phỏng.
-
-1. Kết nối đến **Test-Interface-Endpoint EC2 instance** với **Session Manager**
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/test1.png)
-
-2. Kiểm tra DNS resolution. Lệnh dig sẽ trả về địa chỉ IP được gán cho VPC endpoint interface đang chạy trên VPC (địa chỉ IP của bạn sẽ khác):
-
-```
-dig +short s3.us-east-1.amazonaws.com 
-```
-{{% notice note %}}
-Các địa chỉ IP được trả về là các địa chỉ IP VPC enpoint, KHÔNG phải là các địa chỉ IP Resolver mà bạn đã dán từ trình chỉnh sửa văn bản của mình. Các địa chỉ IP của  Resolver endpoint  và  VPC endpoin trông giống nhau vì chúng đều từ khối CIDR VPC Cloud.
-{{% /notice %}}
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/dig.png)
-
-3. Truy cập vào menu VPC (phần Endpoints), chọn S3 interface endpoint. Nhấp vào tab Subnets và xác nhận rằng các địa chỉ IP được trả về bởi lệnh Dig khớp với VPC endpoint:
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/subnet.png)
-
-4. Hãy quay lại shell của bạn và sử dụng AWS CLI để kiểm tra danh sách các bucket S3 của bạn:
-
-```
-aws s3 ls --endpoint-url https://s3.us-east-1.amazonaws.com
-```
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/endpoint.png)
-
-5. Kết thúc phiên làm việc của Session Manager của bạn:
-
-![create rule](/images/5-Workshop/5.4-S3-onprem/terminal.png)
+##### 1.2.1.Mở PowerShell với quyền Quản trị viên ( Run as Administrator)
 
 
-Trong phần này, bạn đã tạo một  **Interface Endpoint**  cho Amazon S3. Điểm cuối này có thể được truy cập từ on-premises thông qua Site-to-Site VPN hoặc AWS Direct Connect. Các điểm cuối Route 53 Resolver outbound giả lập chuyển tiếp các yêu cầu DNS từ on-premises đến một Private Hosted Zone đang chạy trên đám mây. Các điểm cuối Route 53 inbound nhận yêu cầu giải quyết và trả về một phản hồi chứa địa chỉ IP của  **Interface Endpoint**  VPC. Sử dụng DNS để giải quyết các địa chỉ IP của điểm cuối cung cấp tính sẵn sàng cao trong trường hợp một Availability Zone gặp sự cố.
+![image29.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image29.png)
+
+
+##### 1.2.2.Chạy câu lệnh kích hoạt tính năng WSL và Virtual Machine Platform
+
+
+![image30.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image30.png)
+
+
+##### 1.2.3.Khởi động lại máy tính
+
+##### 1.2.4.Mở lại PowerShell (Admin) và đặt WSL 2 làm phiên bản mặc định
+
+
+![image31.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image31.png)
+
+
+#### 1.3.Tải và cài đặt Docker Desktop bản chính thức
+
+##### 1.3.1.Truy cập trang chủ của Docker
+
+https://www.docker.com/products/docker-desktop/
+
+
+![image32.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image32.png)
+
+
+##### 1.3.2.Nhấn nút Download for Windows để tải về tập tin Docker Desktop Installer.exe
+
+##### 1.3.3. Mở tập tin .exe vừa tải về để tiến hành cài đặt:
+
+Tích chọn "Use WSL 2 instead of Hyper-V (recommended)" (Dùng WSL 2 thay vì Hyper-V).
+
+Tích chọn "Add shortcut to desktop" (Tạo lối tắt trên màn hình chính).
+
+Nhấn Ok và chờ quá trình giải nén tập tin hoàn tất.
+
+##### 1.3.4. Nhấn Close and restart để áp dụng thay đổi hệ thống.
+
+#### 1.4. Khởi chạy và cấu hình Docker Desktop lần đầu
+
+##### 1.4.1.Mở ứng dụng Docker Desktop
+
+
+![image33.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image33.png)
+
+
+##### 1.4.2. Chọn Accept để đồng ý với các điều khoản dịch vụ (Subscription Service Agreement).
+
+##### 1.4.3. Tại giao diện chính Docker Desktop, chọn biểu tượng Settings (Bánh răng) ➔ Mục General:
+
+- Đảm bảo ô Use the WSL 2 based engine đã được tích chọn.
+
+
+![image34.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image34.png)
+
+
+##### 1.4.4. Quan sát góc dưới bên trái giao diện: Biểu tượng Docker hiển thị màu xanh lá kèm dòng chữ Engine Running là Docker đã sẵn sàng hoạt động.
+
+
+![image35.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image35.png)
+
+
+### 2.Viết và tối ưu Docker File
+
+
+![image36.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image36.png)
+
+
+### 3.Khởi tạo Reponsitory trên Amazon ERC ( thông qua AWS CLI )
+
+Mở PowerShell và thực hiện lệnh
+
+
+![image37.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image37.png)
+
+
+### 4.Đăng nhập Docker CLI vào Amazon ECR ( AUTHENTICATION )
+
+Do Amazon ECR yêu cầu xác thực bảo mậtToken (có hiệu lực trong 12 giờ), ta dùng lệnh lấy mật khẩu tạm thời từ AWS ECR truyền trực tiếp vào Docker Login
+
+
+![image38.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image38.png)
+
+
+Kết quả : Login Success là coi như thành công
+
+### 5.Build Docker Image và push lên Amazon ECR
+
+#### 5.1. Build Docker Image
+
+Nhập câu lệnh này trong Terminal
+
+
+![image39.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image39.png)
+
+
+#### 5.2. Push Docker Image lên ECR Repository
+
+
+![image40.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image40.png)
+
+
+### 6.Đồng bộ Docker Image với AWS Lambda
+
+Mở terminal và nhập lệnh CLI để có thể đồng bộ
+
+
+![image41.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image41.png)
+
+
+Kết quả :
+
+
+![image42.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image42.png)
+
+
+### 1.Lập trình Backend Mangum Handler và cấu hình
+
+#### 1.1.Cấu hình đường dẫn lưu trữ tạm trong backend/config.py
+
+Môi trường AWS Lambda là Stateless và chỉ cho phép ghi dữ liệu tạm vào thư mục /tmp
+
+
+![image43.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image43.png)
+
+
+#### 1.2. Tạo Mangum Handler trong backend/app_api.py
+
+Sử dụng thư viện Mangum để chuyển đổi các HTTP Request từ AWS API Gateway sang ASGI Format của FastAPI
+
+
+![image44.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image44.png)
+
+
+### 2.Chuẩn bị DOCKERFILE cho AWS Lambda
+
+Tạo file backend/Dockerfile tối ưu siêu nhẹ (~1.0 GB), không chứa PyTorch hay Weights nặng
+
+
+![image45.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image45.png)
+
+
+### 3.Tạo IAM ROLE và phân quyền cho AWS Lambda
+
+Lambda cần có quyền tương tác với S3, DynamoDB, Bedrock và CloudWatch
+
+#### 3.1. Tạo Trust Policy (trust-policy.json):
+
+
+![image46.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image46.png)
+
+
+#### 3.2. Chạy lệnh AWS CLI tạo Role và gán các Managed Policy
+
+
+![image47.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image47.png)
+
+
+### 4.Bình đóng gói và push Docker Image lên Amazon ECR
+
+
+![image48.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image48.png)
+
+
+### 5.Khởi tạo hàm AWS Lambda Function
+
+### 1.Mở Terminal hoặc PowerShell
+
+
+![image49.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image49.png)
+
+
+### 2.Khởi tạo hàm Lambda Function thông qua AWS CLI
+
+#### 2.1.Tạo hàm Lambda từ ECR Container Image
+
+Hàm này là Backend Core xử lý toàn bộ logic API và AI RAG
+
+
+![image50.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image50.png)
+
+
+Sau đó cấu hình đầy đủ 7 Biến Môi Trường
+
+
+![image51.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image51.png)
+
+
+Cấp quyền cho API Gateway để gọi hàm Lambda này
+
+
+![image52.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image52.png)
+
+
+#### 2.2.Tạo hàm Lambda từ file Zip mã nguồn
+
+Hàm này được dùng làm Cognito Trigger (Pre Sign-up) để dọn dẹp user chưa verify email
+
+
+![image53.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image53.png)
+
+
+Sau đó phải Cấp quyền cho Cognito User Pool gọi hàm Lambda này
+
+
+![image54.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image54.png)
+
+
+Kết quả :
+
+
+![image55.png](/images/5-Workshop/5.4-Backend-deployment/5.4.4-creating-AWS-lambda/image55.png)
+
