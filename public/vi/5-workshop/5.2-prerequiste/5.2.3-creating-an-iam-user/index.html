@@ -15,21 +15,21 @@
     <title>Tạo IAM User :: Báo cáo thực tập</title>
 
     
-    <link href="/css/nucleus.css?1784528550" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1784528550" rel="stylesheet">
-    <link href="/css/hybrid.css?1784528550" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1784528550" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1784528550" rel="stylesheet">
-    <link href="/css/auto-complete.css?1784528550" rel="stylesheet">
-    <link href="/css/atom-one-dark-reasonable.css?1784528550" rel="stylesheet">
-    <link href="/css/theme.css?1784528550" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1784528550" rel="stylesheet">
+    <link href="/css/nucleus.css?1784776842" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1784776842" rel="stylesheet">
+    <link href="/css/hybrid.css?1784776842" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1784776842" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1784776842" rel="stylesheet">
+    <link href="/css/auto-complete.css?1784776842" rel="stylesheet">
+    <link href="/css/atom-one-dark-reasonable.css?1784776842" rel="stylesheet">
+    <link href="/css/theme.css?1784776842" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1784776842" rel="stylesheet">
     
-    <link href="/css/theme-workshop.css?1784528550" rel="stylesheet">
+    <link href="/css/theme-workshop.css?1784776842" rel="stylesheet">
     
     
 
-    <script src="/js/jquery-3.3.1.min.js?1784528550"></script>
+    <script src="/js/jquery-3.3.1.min.js?1784776842"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
@@ -59,14 +59,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1784528550"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1784528550"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1784776842"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1784776842"></script>
 <script type="text/javascript">
     
         var baseurl = "http:\/\/localhost:16883\/\/vi";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1784528550"></script>
+<script type="text/javascript" src="/js/search.js?1784776842"></script>
  
   </div>
 
@@ -869,7 +869,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/"
-  title="Mô phỏng On-premises DNS "
+  title="Tạo AWS Lambda"
   class="dd-item 
         
         
@@ -877,7 +877,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.4-creating-aws-lambda/">
-     <b> 5.4.4 </b> Mô phỏng On-premises DNS  
+     <b> 5.4.4 </b> Tạo AWS Lambda 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -887,7 +887,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/"
-  title="Tạo AWS Lambda"
+  title="Tạo API Gateway"
   class="dd-item 
         
         
@@ -895,7 +895,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.5-creating-api-gateway/">
-     <b> 5.4.5 </b> Tạo AWS Lambda 
+     <b> 5.4.5 </b> Tạo API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -905,7 +905,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-  title="Tạo API Gateway"
+  title="Viết Frontend gọi API Gateway"
   class="dd-item 
         
         
@@ -913,7 +913,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/">
-     <b> 5.4.6 </b> Tạo API Gateway 
+     <b> 5.4.6 </b> Viết Frontend gọi API Gateway 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -923,7 +923,7 @@
             
 <li
   data-nav-id="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/"
-  title="Viết Frontend gọi API Gateway"
+  title="Tự động triển khai Lambda bằng CodePipeline"
   class="dd-item 
         
         
@@ -931,7 +931,7 @@
         "
 >
   <a href="/vi/5-workshop/5.4-backend-deployment/5.4.7-automating-lambda-deployment-with-codepipeline/">
-     <b> 5.4.7 </b> Viết Frontend gọi API Gateway 
+     <b> 5.4.7 </b> Tự động triển khai Lambda bằng CodePipeline 
     <i class="fas fa-check read-icon"></i>
     
   </a>
@@ -1103,7 +1103,7 @@
     <br>
     <b> Last Updated </b> <br>
     <i>
-        <font color=orange>20-07-2026</font>
+        <font color=orange>23-07-2026</font>
     </i>
 </left>
 <left>
@@ -1171,7 +1171,18 @@
                 </div>
                 
                     <div class="progress">
-  <div class="wrapper"><nav id="TableOfContents"></nav></div>
+  <div class="wrapper"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-tìm-kiếm-iam-trong-thanh-công-cụ-tìm-kiếm-aws-console">1. Tìm kiếm IAM trong thanh công cụ tìm kiếm AWS Console</a></li>
+        <li><a href="#2-tạo-iam-user-groups">2. Tạo IAM user groups</a></li>
+        <li><a href="#3-tạo-iam-users">3. Tạo IAM users</a></li>
+        <li><a href="#4-tiếp-tục-tạo-tài-khoản">4. Tiếp tục tạo tài khoản</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
 </div>
 
                 
@@ -1194,7 +1205,72 @@
 
 
 
-	
+	<h3 id="1-tìm-kiếm-iam-trong-thanh-công-cụ-tìm-kiếm-aws-console">1. Tìm kiếm IAM trong thanh công cụ tìm kiếm AWS Console</h3>
+<p><img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/findIAM.png" alt="findIAM"></p>
+<h3 id="2-tạo-iam-user-groups">2. Tạo IAM user groups</h3>
+<ul>
+<li>Trong giao diện IAM user groups:
+<ul>
+<li>Chọn <strong>Create group</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/IAMUserGroup.png" alt="IAMUserGroup"></li>
+</ul>
+</li>
+<li>Trong giao diện Create user group:
+<ul>
+<li>User group name: Nhập <code>AdminGroup</code></li>
+<li>Attach permissions policies - Optional: Tìm <code>AdministratorAccess</code> và click chọn
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/createUserGroup.png" alt="createUserGroup"></li>
+<li>Cuộn đến cuối trang và nhấn <strong>Create user group</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/createUserGroupNext.png" alt="createUserGroupNext"></li>
+</ul>
+</li>
+<li>Kiểm tra kết quả tạo thành công IAM user group
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/createUserGroupSuccess.png" alt="createUserGroupSuccess"></li>
+</ul>
+<h3 id="3-tạo-iam-users">3. Tạo IAM users</h3>
+<ul>
+<li>Trong giao diện IAM users:
+<ul>
+<li>Chọn <strong>Create user</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/IAMUser.png" alt="IAMUser"></li>
+</ul>
+</li>
+<li>Trong giao diện Specify user details
+<ul>
+<li>User name: Nhập <code>dev1</code></li>
+<li>Click chọn <strong>Provide user access to the AWS Management Console - optional</strong></li>
+<li>Sau đó, chọn <strong>Next</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/specify.png" alt="specify"></li>
+</ul>
+</li>
+<li>Trong giao diện Set permissions:
+<ul>
+<li>Chọn <strong>Add user to group</strong></li>
+<li>User groups: Chọn AdminGroup vừa tạo</li>
+<li>Sau đó, nhấn <strong>Next</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/setPermission.png" alt="setPermission"></li>
+</ul>
+</li>
+<li>Trong giao diện Review and create:
+<ul>
+<li>Kiểm tra lại thông tin IAM user</li>
+<li>Nhấn <strong>create user</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/reviewAndCreate.png" alt="reviewAndCreate"></li>
+</ul>
+</li>
+<li>Trong giao diện Retrieve password
+<ul>
+<li>Lưu ý Nhấn <strong>Download .csv file</strong></li>
+<li>Sau đó nhấn <strong>Return to user list</strong>
+<img src="/images/5-Workshop/5.2-Prerequisite/5.2.3-creating-an-IAM-user/success.png" alt="success"></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-tiếp-tục-tạo-tài-khoản">4. Tiếp tục tạo tài khoản</h3>
+<ul>
+<li>Thực hiện lại các bước 2, 3 để tạo thêm các tài khoản IAM user với quyền admin để cung cấp cho các thành viên nhóm thực hành project</li>
+</ul>
+
 
 
 
@@ -2098,19 +2174,19 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.min.js?1784528550"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1784528550"></script>
-    <script src="/js/jquery.sticky.js?1784528550"></script>
-    <script src="/js/featherlight.min.js?1784528550"></script>
-    <script src="/js/highlight.pack.js?1784528550"></script>
+    <script src="/js/clipboard.min.js?1784776842"></script>
+    <script src="/js/perfect-scrollbar.min.js?1784776842"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1784776842"></script>
+    <script src="/js/jquery.sticky.js?1784776842"></script>
+    <script src="/js/featherlight.min.js?1784776842"></script>
+    <script src="/js/highlight.pack.js?1784776842"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom-3.6.0.js?1784528550"></script>
-    <script src="/js/learn.js?1784528550"></script>
-    <script src="/js/hugo-learn.js?1784528550"></script>
+    <script src="/js/modernizr.custom-3.6.0.js?1784776842"></script>
+    <script src="/js/learn.js?1784776842"></script>
+    <script src="/js/hugo-learn.js?1784776842"></script>
 
-    <link href="/mermaid/mermaid.css?1784528550" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1784528550"></script>
+    <link href="/mermaid/mermaid.css?1784776842" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1784776842"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>

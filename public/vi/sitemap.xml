@@ -587,19 +587,6 @@
                 href="http://localhost:16883/vi/5-workshop/"
                 />
   </url><url>
-    <loc>http://localhost:16883/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:16883/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="vi"
-                href="http://localhost:16883/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
-                />
-  </url><url>
     <loc>http://localhost:16883/vi/5-workshop/5.3-frontend-deployment/5.3.6-accelerating-website-performance-with-cloudfront/</loc>
     <lastmod>2024-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -637,6 +624,19 @@
                 rel="alternate"
                 hreflang="vi"
                 href="http://localhost:16883/vi/6-self-evaluation/"
+                />
+  </url><url>
+    <loc>http://localhost:16883/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/</loc>
+    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:16883/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="vi"
+                href="http://localhost:16883/vi/5-workshop/5.4-backend-deployment/5.4.6-implementing-frontend-api-gateway-integration/"
                 />
   </url><url>
     <loc>http://localhost:16883/vi/7-feedback/</loc>
