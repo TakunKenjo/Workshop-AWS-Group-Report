@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.4 </b> "
 ---
 
-## Kiểm thử hồ sơ cá nhân
-
 Phần này kiểm tra đầy đủ 4 thao tác CRUD (Create/Read/Update/Delete) trên hồ sơ người dùng: xem thông tin, cập nhật thông tin cá nhân, tải ảnh đại diện qua presigned URL, và xóa tài khoản (bao gồm dọn dẹp toàn bộ dữ liệu liên quan trên Cognito, DynamoDB và S3).
 
 ### 1. Bảng tổng hợp test case

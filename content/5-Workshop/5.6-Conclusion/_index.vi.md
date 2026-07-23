@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.6. </b> "
 ---
 
-## Tổng kết
-
 Sau khi triển khai và kiểm thử toàn diện hệ thống SmartDocAI trên AWS, phần này tổng kết lại những gì nhóm đã đạt được, hướng dẫn dọn dẹp tài nguyên AWS để tránh phát sinh chi phí ngoài ý muốn, và đề xuất các bước tiếp theo nếu muốn đưa hệ thống lên môi trường production thực sự.
 
 ### Nội dung thực hiện

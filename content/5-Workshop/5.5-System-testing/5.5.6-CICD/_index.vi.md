@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.6 </b> "
 ---
 
-## Kiểm thử tự động CI/CD
-
 Phần này kiểm tra quy trình tích hợp unit test vào pipeline CI/CD của SmartDocAI: bộ test pytest chạy tự động mỗi lần push code, cấu hình hard-fail để chặn deploy nếu test không qua, và cách debug khi build gặp lỗi. Đây là lớp bảo vệ giúp phát hiện lỗi trước khi code lọt vào production.
 
 ### 1. Bộ test Pytest

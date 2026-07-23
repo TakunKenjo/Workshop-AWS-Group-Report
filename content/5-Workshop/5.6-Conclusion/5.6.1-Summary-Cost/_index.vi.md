@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.6.1 </b> "
 ---
 
-## Tổng kết Workshop
-
 Xin chúc mừng! Bạn đã hoàn thành việc triển khai và testing hệ thống **SmartDocAI** trên AWS với kiến trúc serverless đầy đủ.
 
 ### Những gì đã học được

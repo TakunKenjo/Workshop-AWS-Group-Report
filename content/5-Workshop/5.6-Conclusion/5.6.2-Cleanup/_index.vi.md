@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.6.2 </b> "
 ---
 
-## Dọn dẹp tài nguyên AWS
-
 ### **CẢNH BÁO:** Quan trọng - Đọc trước khi xóa
 
 - **[NO] MẤT DỮ LIỆU:** Xóa tài nguyên sẽ **MẤT HẾT DỮ LIỆU** (hồ sơ người dùng, tài liệu, logs)
@@ -32,8 +30,11 @@ pre : " <b> 5.6.2 </b> "
 | **Giai đoạn 1: Dừng traffic** | EventBridge, CloudFront, API Gateway | Tắt rule → Tắt CloudFront (⏱️ chờ 30 phút) → Xóa API Gateway | ~35 phút |
 | **Giai đoạn 2: Gỡ compute** | CodePipeline, CodeBuild, Lambda, ECR | Xóa CI/CD pipeline → Xóa Lambda function → Xóa Docker image | ~5 phút |
 | **Giai đoạn 3: Xóa dữ liệu** | S3 Buckets (2), DynamoDB, Cognito, IAM | Làm rỗng S3 → Xóa bucket → Xóa dữ liệu user → Xóa quyền | ~5 phút |
+| **Giai đoạn 4: Giám sát (mới 23/07)** | CloudWatch Alarms, SNS Topic | Xóa 4 alarms → Xóa SNS topic + subscription | ~2 phút |
 
-**Tổng thời gian:** ~45 phút (chủ yếu chờ CloudFront disable)
+**Tổng thời gian:** ~47 phút (chủ yếu chờ CloudFront disable)
+
+> **Lưu ý:** Lifecycle rule S3 Intelligent-Tiering và cấu hình SSE-KMS trên DynamoDB **không cần xóa riêng** — chúng tự động biến mất khi xóa hẳn bucket/table ở Giai đoạn 3.
 
 ---
 
@@ -84,6 +85,15 @@ aws dynamodb delete-table --table-name smartdocai-user-profiles --region us-east
 **6. Xóa Cognito User Pool:**
 ```powershell
 aws cognito-idp delete-user-pool --user-pool-id us-east-1_3oq5wIiuu --region us-east-1
+```
+
+**7. Xóa CloudWatch Alarms + SNS Topic (mới 23/07):**
+```powershell
+# Xóa 4 alarms
+aws cloudwatch delete-alarms --alarm-names smartdocai-lambda-errors smartdocai-lambda-duration smartdocai-lambda-throttles smartdocai-apigateway-5xx --region us-east-1
+
+# Xóa SNS topic (tự động xóa luôn các subscription đính kèm)
+aws sns delete-topic --topic-arn arn:aws:sns:us-east-1:623035187993:smartdocai-alerts --region us-east-1
 ```
 
 **Toàn bộ danh sách lệnh:** Tham khảo AWS Documentation hoặc file `CLEANUP_GUIDE.md` trong source code

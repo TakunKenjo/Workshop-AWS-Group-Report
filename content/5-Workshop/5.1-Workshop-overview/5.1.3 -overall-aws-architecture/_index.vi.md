@@ -5,3 +5,58 @@ weight : 3
 chapter : false
 pre : " <b> 5.1.3 </b> "
 ---
+
+Sau khi tìm hiểu riêng kiến trúc Frontend và Backend ở 2 phần trước, phần này tổng hợp lại thành **bức tranh toàn cảnh** cách các thành phần AWS phối hợp với nhau để tạo thành hệ thống SmartDocAI hoàn chỉnh, cùng với 3 tầng kiến trúc (Presentation - Application - Data) và cấu trúc lưu trữ dữ liệu per-user.
+
+### 1. Sơ đồ kiến trúc tổng thể
+
+<img src="/images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png" width="100%" style="max-width:1100px">
+
+SmartDocAI được xây dựng theo mô hình **Serverless Container Architecture** kết hợp **Managed Identity (Cognito)**, gồm các thành phần chính:
+
+| Thành phần | Dịch vụ AWS | Giá trị cụ thể |
+|---|---|---|
+| Frontend hosting | S3 + CloudFront | `https://dutf3c70nnjzl.cloudfront.net` |
+| Backend API | Lambda + API Gateway | `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod` |
+| Xác thực | Cognito User Pool | `us-east-1_3oq5wIiuu` |
+| Cognito Hosted UI | Cognito | `https://smartdocai-fayrun2026.auth.us-east-1.amazoncognito.com` |
+| PreSignUp trigger | Lambda | `smartdocai-presignup-check` |
+| Profile database | DynamoDB | `smartdocai-user-profiles` (SSE-KMS) |
+| File & Index storage | S3 | `smartdocai-storage-623035187993` (Intelligent-Tiering) |
+| LLM | Bedrock | `mistral.mixtral-8x7b-instruct-v0:1` |
+| Embeddings | Bedrock | `amazon.titan-embed-text-v2:0` (1024 chiều) |
+| CI/CD | CodePipeline | `smartdocai-be-pipeline`, `smartdocsai-fe-pipeline` |
+| Tác vụ định kỳ | EventBridge | Rule dọn user chưa xác thực (rate 5 phút) |
+| Giám sát | CloudWatch | Alarms cho Lambda Errors/Duration/Throttles + API Gateway 5xx |
+
+### 2. Kiến trúc 3 tầng (Three-Tier Architecture)
+
+<img src="/images/5-Workshop/5.1-Workshop-overview/three-tier-architecture.png" width="90%" style="max-width:900px">
+
+- **Tầng Presentation:** CloudFront phân phối static assets từ S3, phục vụ React SPA tới người dùng qua HTTPS.
+- **Tầng Application:** API Gateway nhận request, chuyển tới Lambda (FastAPI đóng gói Docker container) — nơi xử lý toàn bộ logic nghiệp vụ (auth, upload, RAG, profile). EventBridge kích hoạt Lambda định kỳ cho tác vụ dọn dẹp.
+- **Tầng Data:** Cognito quản lý danh tính người dùng, DynamoDB lưu hồ sơ mở rộng, S3 lưu tài liệu + vector index, Bedrock cung cấp năng lực AI (embeddings + LLM).
+
+### 3. Cấu trúc lưu trữ dữ liệu (Storage Structure)
+
+<img src="/images/5-Workshop/5.1-Workshop-overview/storage-structure.png" width="90%" style="max-width:900px">
+
+Toàn bộ dữ liệu được thiết kế **cô lập theo từng user** (`user_id` = Cognito `sub`), tránh rò rỉ dữ liệu chéo giữa các tài khoản:
+
+- `uploads/{user_id}/` — tài liệu gốc (PDF/DOCX) người dùng tải lên
+- `vectorstore/{user_id}/` — FAISS index riêng (1024 chiều) để tìm kiếm ngữ nghĩa
+- `chat_history/{user_id}.json` — lịch sử hội thoại RAG
+- `processed_files/{user_id}.json` — danh sách tài liệu đã xử lý xong
+- DynamoDB `smartdocai-user-profiles` (partition key `user_id`) — chỉ lưu `avatar_url` (các thông tin còn lại như họ tên, SĐT, ngày sinh đã lưu trực tiếp trong Cognito attributes để tránh 2 nơi lưu bị lệch dữ liệu)
+
+### 4. Module hóa Backend (Lambda Modules)
+
+<img src="/images/5-Workshop/5.1-Workshop-overview/lambda-modules.png" width="90%" style="max-width:900px">
+
+`app_api.py` đóng vai trò entry point chính (FastAPI + Mangum adapter), điều hướng request tới các module chuyên biệt trong `modules/`: `auth_service.py` (xác thực), `document_processor.py` + `vector_store.py` (xử lý & lập chỉ mục tài liệu), `rag_chain.py` + `self_rag.py` + `co_rag.py` (3 chế độ RAG), `profile_service.py` (hồ sơ cá nhân).
+
+### 5. CI/CD Pipeline
+
+<img src="/images/5-Workshop/5.1-Workshop-overview/cicd-pipeline.png" width="100%" style="max-width:1100px">
+
+Mỗi lần push code lên nhánh `main` trên GitHub, CodePipeline tự động kích hoạt CodeBuild: cài dependencies → lint bằng flake8 → chạy pytest (hard-fail nếu test không qua) → build Docker image → đẩy lên ECR → cập nhật Lambda function. Cơ chế này đảm bảo code lỗi không thể lọt vào production.

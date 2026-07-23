@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.5 </b> "
 ---
 
-## Giám sát & Nhật ký hệ thống
-
 Phần này hướng dẫn cách theo dõi sức khỏe hệ thống SmartDocAI qua CloudWatch Logs và Metrics: đọc log thời gian thực, viết truy vấn Logs Insights để phân tích lỗi/hiệu năng, và kiểm tra các chỉ số Lambda quan trọng như số lần gọi, thời gian xử lý và tỷ lệ lỗi.
 
 ### 1. Tổng quan CloudWatch Logs

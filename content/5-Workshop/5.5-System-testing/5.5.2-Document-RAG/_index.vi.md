@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.2 </b> "
 ---
 
-## Kiểm thử tải lên tài liệu & RAG
-
 Phần này kiểm tra luồng nghiệp vụ cốt lõi của SmartDocAI: tải tài liệu lên qua S3 presigned URL (bỏ qua giới hạn 10MB của API Gateway), lập chỉ mục vector bằng Bedrock Titan Embeddings, và truy vấn RAG ở 3 chế độ khác nhau (Standard, Self-RAG, Co-RAG). Đây là tính năng quan trọng nhất của hệ thống nên được kiểm thử kỹ cả về chức năng lẫn hiệu năng.
 
 ### 1. Bảng tổng hợp test case

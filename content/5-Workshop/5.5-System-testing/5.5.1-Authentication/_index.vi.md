@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.1 </b> "
 ---
 
-## Kiểm thử xác thực
-
 Phần này kiểm tra toàn bộ luồng xác thực người dùng của SmartDocAI: đăng ký tài khoản, xác nhận email, đăng nhập lấy JWT token, và cơ chế tự động dọn dẹp tài khoản chưa xác nhận qua EventBridge. Các test case dưới đây được thực hiện trực tiếp trên môi trường production qua `curl` và AWS CLI.
 
 ### 1. Bảng tổng hợp test case

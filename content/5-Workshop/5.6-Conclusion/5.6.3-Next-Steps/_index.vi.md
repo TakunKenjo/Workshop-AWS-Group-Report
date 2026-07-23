@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.6.3 </b> "
 ---
 
-## Bước tiếp theo sau Workshop
-
 Workshop đã hoàn thành mục tiêu triển khai và kiểm thử SmartDocAI ở quy mô demo/thực tập. Phần này liệt kê các hạng mục nên cân nhắc bổ sung nếu muốn đưa hệ thống lên môi trường production thực sự với traffic lớn hơn.
 
 ### 1. Các cân nhắc khi triển khai Production

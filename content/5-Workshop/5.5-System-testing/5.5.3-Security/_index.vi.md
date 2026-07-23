@@ -6,8 +6,6 @@ chapter : false
 pre : " <b> 5.5.3 </b> "
 ---
 
-## Kiểm thử bảo mật
-
 Phần này kiểm tra các cơ chế bảo vệ hệ thống: validate dữ liệu đầu vào (chống XSS), giới hạn CORS, xác thực JWT, và rà soát lại checklist bảo mật tổng thể của hệ thống so với khuyến nghị production.
 
 ### 1. Kiểm thử Input Validation
@@ -66,7 +64,36 @@ def validate_jwt(token: str) -> dict:
 
 ---
 
-### 3. Rà soát checklist bảo mật
+### 3. Kiểm thử CSRF State Parameter (Google OAuth)
+
+Luồng đăng nhập Google qua Cognito Hosted UI trước đây không có tham số `state`, cho phép attacker dụ nạn nhân click 1 link chứa authorization code do attacker tạo sẵn (Login CSRF). Đã bổ sung `state = crypto.randomUUID()` sinh ở Frontend, lưu tạm `sessionStorage`, verify khi Cognito redirect về `/auth/callback`.
+
+**Test case đã thực hiện trên production:**
+
+| # | Test Case | Cách thực hiện | Kết quả mong đợi | Status |
+|---|-----------|-----------------|-------------------|--------|
+| 1 | Login Google bình thường | Đăng nhập qua tab ẩn danh | Vào `/app` thành công | PASS |
+| 2 | `state` xuất hiện trong URL | DevTools Network → check request `/oauth2/authorize` | Có `state=<UUID>` | PASS |
+| 3 | `state` sai (giả lập CSRF) | Sửa tay `state` trong URL callback | Redirect `/login` + báo lỗi, không gọi tới Cognito | PASS |
+| 4 | `state` đúng nhưng `code` giả | Dùng đúng `state` thật + `code` giả | Qua được tầng 1 (state), bị Cognito từ chối ở tầng 2 (invalid_grant) | PASS |
+| 5 | sessionStorage tự dọn dẹp | Kiểm tra `oauth_state` sau mỗi lần verify | Key bị xóa (chống replay) | PASS |
+
+**Cơ chế 2 tầng bảo vệ độc lập:**
+
+```mermaid
+flowchart LR
+    A[Request tới /auth/callback] --> B{state khớp sessionStorage?}
+    B -->|Sai/thiếu| C["Chặn ngay - Tầng 1: state UUID"]
+    B -->|Đúng| D{code hợp lệ với Cognito?}
+    D -->|Giả/đã dùng/hết hạn| E["Chặn - Tầng 2: Cognito single-use code"]
+    D -->|Hợp lệ| F[Đăng nhập thành công]
+```
+
+Chi tiết đầy đủ tham khảo `BANGIAO-23-07-2026.md` (mục 2.3).
+
+---
+
+### 4. Rà soát checklist bảo mật
 
 Tham khảo: `SECURITY_CONSIDERATIONS.md`
 
@@ -77,9 +104,11 @@ Tham khảo: `SECURITY_CONSIDERATIONS.md`
 | **Validate đầu vào** | **Đã triển khai** | Validator cho phone, DOB, fullname |
 | **Chống XSS** | **Đã triển khai** | Chặn thẻ `<script>` trong fullname |
 | **Giới hạn CORS** | **Đã fix** | Đã bỏ wildcard |
+| **CSRF protection (OAuth state)** | **Đã triển khai** (23/07/2026) | Xem mục 3 phía trên |
+| **Mã hóa DynamoDB (KMS)** | **Đã triển khai** (23/07/2026) | SSE-KMS, key `alias/aws/dynamodb` |
 | **Chỉ dùng HTTPS** | **Bắt buộc** | TLS 1.2+ trên CloudFront/API Gateway |
 | **SQL injection** | **Không áp dụng** | Không dùng SQL database (DynamoDB) |
-| **Rate limiting** | **Chưa triển khai** | Dựa vào giới hạn mặc định của API Gateway (10K RPS) và cơ chế throttling built-in của Cognito |
+| **Rate limiting** | **Chưa triển khai** | Cognito đã có throttling/lockout built-in miễn phí; AWS WAF (~$5-10/tháng) chưa tương xứng với quy mô demo/thực tập hiện tại — khuyến nghị bổ sung khi lên production với traffic lớn hơn |
 | **Mã hóa dữ liệu lưu trữ** | **Đã triển khai (một phần)** | DynamoDB đã bật SSE-KMS; S3 giữ SSE-S3 mặc định (đã tự động mã hóa từ 2023) |
 | **Cô lập VPC** | **Chưa cấu hình** | Lambda chạy ngoài VPC (public) |
 | **OAuth state parameter** | **Đã triển khai** | Đã thêm state chống CSRF cho luồng Google OAuth |
