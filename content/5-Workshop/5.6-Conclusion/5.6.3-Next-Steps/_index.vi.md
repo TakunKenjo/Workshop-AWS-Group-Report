@@ -1,39 +1,41 @@
 ---
-title : "Next Steps & References"
+title : "Bước tiếp theo & Tài liệu tham khảo"
 date : 2024-01-01
 weight : 3
 chapter : false
 pre : " <b> 5.6.3 </b> "
 ---
 
-## Next Steps After Workshop
+## Bước tiếp theo sau Workshop
 
-### 1. Production Deployment Considerations
-- Enable S3/DynamoDB encryption (KMS)
-- Deploy Lambda in VPC with NAT Gateway
-- Add API Gateway resource policies (IP whitelist)
-- Implement per-user rate limiting
-- Enable Cognito MFA
-- Add OAuth state parameter (CSRF protection)
-- Setup CloudWatch alarms (error rate, latency)
-- Implement blue/green deployment for Lambda
+Workshop đã hoàn thành mục tiêu triển khai và kiểm thử SmartDocAI ở quy mô demo/thực tập. Phần này liệt kê các hạng mục nên cân nhắc bổ sung nếu muốn đưa hệ thống lên môi trường production thực sự với traffic lớn hơn.
 
-### 2. Cost Optimization
-- Use S3 Intelligent-Tiering for infrequent access
-- Implement DynamoDB auto-scaling (reserved capacity)
-- Add CloudFront caching for API responses (where applicable)
-- Use Lambda SnapStart (reduce cold start to ~100ms)
-- Compress documents before uploading (reduce S3 storage)
+### 1. Các cân nhắc khi triển khai Production
+- ~~Bật mã hóa S3/DynamoDB (KMS)~~ — **Đã triển khai một phần:** DynamoDB đã bật SSE-KMS; S3 giữ SSE-S3 mặc định (đã tự động mã hóa từ 2023, đủ dùng ở quy mô hiện tại)
+- Triển khai Lambda trong VPC kèm NAT Gateway
+- Thêm API Gateway resource policy (IP whitelist) cho các endpoint quản trị
+- Triển khai rate limiting theo từng user (khuyến nghị dùng AWS WAF)
+- Bật Cognito MFA
+- ~~Thêm OAuth state parameter (chống CSRF)~~ — **Đã triển khai** (23/07/2026)
+- ~~Setup CloudWatch alarms (tỉ lệ lỗi, độ trễ)~~ — **Đã triển khai** (23/07/2026)
+- Triển khai blue/green deployment cho Lambda
 
-### 3. Enhanced Features
-- Add multi-region deployment (ap-southeast-1 Singapore)
-- Implement real-time collaboration (WebSocket API)
-- Add document OCR support (Textract)
-- Implement full-text search (OpenSearch)
-- Add email notifications (SES)
-- Implement audit logs (CloudTrail + S3)
+### 2. Tối ưu chi phí
+- ~~Dùng S3 Intelligent-Tiering cho dữ liệu ít truy cập~~ — **Đã triển khai** (23/07/2026)
+- Triển khai DynamoDB auto-scaling (reserved capacity)
+- Thêm CloudFront caching cho API response (ở những endpoint phù hợp)
+- Lambda SnapStart (giảm cold start còn ~100ms) — *lưu ý: hiện chỉ hỗ trợ Java/.NET, chưa hỗ trợ Python*
+- Nén tài liệu trước khi upload (giảm dung lượng S3)
 
-### 4. Learning Resources
+### 3. Tính năng mở rộng
+- Triển khai multi-region (ap-southeast-1 Singapore)
+- Cộng tác thời gian thực (WebSocket API)
+- Hỗ trợ OCR tài liệu (Textract)
+- Tìm kiếm full-text (OpenSearch)
+- Thông báo qua email (SES)
+- Audit logs (CloudTrail + S3)
+
+### 4. Tài liệu tham khảo thêm
 - [AWS Serverless Application Model (SAM)](https://aws.amazon.com/serverless/sam/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Amazon Bedrock Best Practices](https://docs.aws.amazon.com/bedrock/)
@@ -62,4 +64,4 @@ Nếu có câu hỏi hoặc feedback về workshop này, vui lòng liên hệ:
 - **GitHub:** [@TakunKenjo](https://github.com/TakunKenjo)
 - **Workshop Repository:** [Workshop-AWS-Group-Report](https://github.com/TakunKenjo/Workshop-AWS-Group-Report)
 
-**Cảm ơn bạn đã hoàn thành workshop SmartDocAI!** 🎉
+**Cảm ơn bạn đã hoàn thành workshop SmartDocAI!**

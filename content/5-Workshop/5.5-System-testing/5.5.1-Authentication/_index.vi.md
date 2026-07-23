@@ -1,14 +1,16 @@
 ---
-title : "Authentication Testing"
+title : "Kiểm thử xác thực"
 date : 2024-01-01
 weight : 1
 chapter : false
 pre : " <b> 5.5.1 </b> "
 ---
 
-## Authentication Testing - Kiểm thử xác thực
+## Kiểm thử xác thực
 
-### Test Summary Table
+Phần này kiểm tra toàn bộ luồng xác thực người dùng của SmartDocAI: đăng ký tài khoản, xác nhận email, đăng nhập lấy JWT token, và cơ chế tự động dọn dẹp tài khoản chưa xác nhận qua EventBridge. Các test case dưới đây được thực hiện trực tiếp trên môi trường production qua `curl` và AWS CLI.
+
+### 1. Bảng tổng hợp test case
 
 | # | Test Case | Input | Expected Result | Status |
 |---|-----------|-------|-----------------|--------|
@@ -54,11 +56,11 @@ pre : " <b> 5.5.1 </b> "
 
 ---
 
-### 1.3. Login & JWT Token
+### 2. Đăng nhập & JWT Token
 
 **Endpoint:** `POST https://.../prod/auth/login`
 
-**Test case: Successful login**
+**Test case: Đăng nhập thành công**
 ```bash
 curl -X POST https://.../prod/auth/login \
   -H "Content-Type: application/json" \
@@ -80,7 +82,7 @@ curl -X POST https://.../prod/auth/login \
 }
 ```
 
-**Test case: Wrong password**
+**Test case: Sai mật khẩu**
 ```bash
 curl -X POST .../auth/login \
   -d '{"email": "test@example.com", "password": "WrongPass"}'
@@ -93,7 +95,7 @@ curl -X POST .../auth/login \
 }
 ```
 
-**JWT Validation:**
+**Kiểm tra JWT:**
 ```bash
 # Decode ID token để xem claims
 echo "eyJraWQiOiJ..." | base64 -d | jq .
@@ -111,7 +113,7 @@ echo "eyJraWQiOiJ..." | base64 -d | jq .
 }
 ```
 
-**Test API with JWT:**
+**Gọi API kèm JWT:**
 ```bash
 # Get user profile với JWT token
 curl -X GET https://.../prod/profile \
@@ -134,17 +136,17 @@ curl -X GET https://.../prod/profile \
 
 ---
 
-### 1.4. EventBridge Auto-Cleanup Testing
+### 3. Kiểm thử tự động dọn dẹp qua EventBridge
 
-**Purpose:** Verify rằng EventBridge rule xóa UNCONFIRMED users sau 5 phút
+**Mục đích:** Xác minh rằng EventBridge rule tự động xóa các tài khoản UNCONFIRMED sau 5 phút, tránh tính trạng tài khoản rác tích tụ trong Cognito.
 
-**Test workflow:**
-1. Create new user (don't confirm email)
-2. Wait 6 minutes
-3. Check CloudWatch Logs `/aws/lambda/smartdocai`
-4. Try to login → Should fail (user deleted)
+**Quy trình test:**
+1. Tạo user mới (không xác nhận email)
+2. Chờ 6 phút
+3. Kiểm tra CloudWatch Logs `/aws/lambda/smartdocai`
+4. Thử đăng nhập lại → phải thất bại (user đã bị xóa)
 
-**Check EventBridge invocations:**
+**Kiểm tra EventBridge đã trại qua chạy:**
 ```bash
 aws events list-rules --region us-east-1 | grep smartdocai
 
@@ -157,7 +159,7 @@ aws events list-rules --region us-east-1 | grep smartdocai
 }
 ```
 
-**Check CloudWatch Logs:**
+**Kiểm tra CloudWatch Logs:**
 ```bash
 aws logs filter-log-events \
   --log-group-name /aws/lambda/smartdocai \
@@ -166,12 +168,12 @@ aws logs filter-log-events \
   --region us-east-1
 ```
 
-**Expected log output:**
+**Kết quả log mong đợi:**
 ```
 [Cleanup] Deleted 3 users: ['user1@example.com', 'user2@example.com', 'user3@example.com']
 ```
 
-**Verify user deleted in Cognito:**
+**Xác minh user đã bị xóa trong Cognito:**
 ```bash
 aws cognito-idp list-users \
   --user-pool-id us-east-1_3oq5wIiuu \

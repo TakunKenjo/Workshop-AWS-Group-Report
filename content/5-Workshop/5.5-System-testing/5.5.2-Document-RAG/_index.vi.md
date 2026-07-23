@@ -1,14 +1,16 @@
 ---
-title : "Document Upload & RAG Testing"
+title : "Kiểm thử tải lên tài liệu & RAG"
 date : 2024-01-01
 weight : 2
 chapter : false
 pre : " <b> 5.5.2 </b> "
 ---
 
-## Document Upload & RAG Testing
+## Kiểm thử tải lên tài liệu & RAG
 
-### Test Summary Table
+Phần này kiểm tra luồng nghiệp vụ cốt lõi của SmartDocAI: tải tài liệu lên qua S3 presigned URL (bỏ qua giới hạn 10MB của API Gateway), lập chỉ mục vector bằng Bedrock Titan Embeddings, và truy vấn RAG ở 3 chế độ khác nhau (Standard, Self-RAG, Co-RAG). Đây là tính năng quan trọng nhất của hệ thống nên được kiểm thử kỹ cả về chức năng lẫn hiệu năng.
+
+### 1. Bảng tổng hợp test case
 
 | # | Test Case | Endpoint | Input | Expected Result | Status |
 |---|-----------|----------|-------|-----------------|--------|
@@ -31,17 +33,17 @@ pre : " <b> 5.5.2 </b> "
 | **RAG QUERY - CO-RAG MODE** |
 | 2.12 | Co-RAG collaborative retrieval | POST /chat | query + mode=co-rag | 200 OK<br/>Return: answer + sources (7-10 chunks) + processing_time (~10-15s) | PASS |
 
-**API Endpoint Base:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod`
+**Điểm cuối API gốc:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod`
 
-**Backend Processing Steps (Document Indexing):**
-1. Download file from S3 → 2. Parse PDF (pypdf2) → 3. Chunk text (500 tokens, 50 overlap) → 4. Generate embeddings (Bedrock Titan V2, 1024-dim) → 5. Store vectors in FAISS (in-memory, per-user isolation)
+**Các bước xử lý ở Backend (lập chỉ mục tài liệu):**
+1. Tải file từ S3 → 2. Parse PDF (pypdf2) → 3. Chia nhỏ văn bản (500 tokens, overlap 50) → 4. Sinh embeddings (Bedrock Titan V2, 1024 chiều) → 5. Lưu vector vào FAISS (in-memory, cô lập theo từng user)
 
-**S3 CORS Configuration:**
-- **Allowed Origins:** CloudFront (dutf3c70nnjzl.cloudfront.net), localhost:5173, localhost:5174
-- **Allowed Methods:** GET, PUT, POST, DELETE, HEAD
-- **Max Age:** 3600 seconds
+**Cấu hình CORS cho S3:**
+- **Origin được phép:** CloudFront (dutf3c70nnjzl.cloudfront.net), localhost:5173, localhost:5174
+- **Method được phép:** GET, PUT, POST, DELETE, HEAD
+- **Max Age:** 3600 giây
 
-**RAG Mode Performance Comparison:**
+**So sánh hiệu năng giữa các chế độ RAG:**
 
 | Metric | Standard RAG | Self-RAG | Co-RAG |
 |--------|-------------|----------|--------|
