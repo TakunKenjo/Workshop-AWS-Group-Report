@@ -55,6 +55,7 @@ phases:
       - echo "=== Phase 7: Deploying Updated Image to AWS Lambda ==="
       - aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $REPOSITORY_URI:$IMAGE_TAG
 ```
+
 ![file-buildspec](/images/5-Workshop/5.4-Backend-deployment/5.4.7-automating-lambda-deployment-with-codePipeline/file-buildspec.png)
 
 **Step 2: Create CodePipeline**
@@ -155,6 +156,7 @@ phases:
   ]
 }
 ```
+
 ![json](/images/5-Workshop/5.4-Backend-deployment/5.4.7-automating-lambda-deployment-with-codePipeline/json.png)
   - Scroll to the bottom of the page and click **Next**
 ![json-next](/images/5-Workshop/5.4-Backend-deployment/5.4.7-automating-lambda-deployment-with-codePipeline/json-next.png)
