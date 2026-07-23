@@ -1,14 +1,14 @@
 ---
-title : "Profile Testing"
+title : "Kiểm thử hồ sơ cá nhân"
 date : 2024-01-01
 weight : 4
 chapter : false
 pre : " <b> 5.5.4 </b> "
 ---
 
-## Profile Testing - CRUD Operations
+Phần này kiểm tra đầy đủ 4 thao tác CRUD (Create/Read/Update/Delete) trên hồ sơ người dùng: xem thông tin, cập nhật thông tin cá nhân, tải ảnh đại diện qua presigned URL, và xóa tài khoản (bao gồm dọn dẹp toàn bộ dữ liệu liên quan trên Cognito, DynamoDB và S3).
 
-### Test Summary Table
+### 1. Bảng tổng hợp test case
 
 | # | Operation | Endpoint | Input | Expected Result | Verification | Status |
 |---|-----------|----------|-------|-----------------|--------------|--------|
@@ -30,9 +30,9 @@ pre : " <b> 5.5.4 </b> "
 | 4.12 | Verify S3 objects deleted | AWS CLI: s3 ls | Path: users/{user_id}/ | Empty (no objects) | - | PASS |
 | 4.13 | Verify FAISS cleared | POST /chat after delete | JWT token (new user) | No vectors from old user | Per-user isolation works | PASS |
 
-**API Endpoint:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod/profile`
+**Điểm cuối API:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod/profile`
 
-**Profile Schema (DynamoDB + Cognito):**
+**Sơ đồ dữ liệu hồ sơ (DynamoDB + Cognito):**
 ```json
 {
   "user_id": "uuid (from Cognito sub)",
@@ -46,10 +46,10 @@ pre : " <b> 5.5.4 </b> "
 }
 ```
 
-**Account Deletion Cleanup Actions:**
-1. Delete Cognito user (`admin_delete_user`)
-2. Delete DynamoDB profile record
-3. Delete all S3 objects under `users/{user_id}/` (documents + avatar)
-4. Clear FAISS vector DB for user (in-memory)
+**Các bước dọn dẹp khi xóa tài khoản:**
+1. Xóa user trên Cognito (`admin_delete_user`)
+2. Xóa bản ghi hồ sơ trên DynamoDB
+3. Xóa toàn bộ object S3 dưới `users/{user_id}/` (tài liệu + avatar)
+4. Xóa dữ liệu vector FAISS của user (in-memory)
 
 ---

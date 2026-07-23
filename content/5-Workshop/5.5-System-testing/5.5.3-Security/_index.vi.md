@@ -1,37 +1,37 @@
 ---
-title : "Security Testing"
+title : "Kiểm thử bảo mật"
 date : 2024-01-01
 weight : 3
 chapter : false
 pre : " <b> 5.5.3 </b> "
 ---
 
-## Security Testing
+Phần này kiểm tra các cơ chế bảo vệ hệ thống: validate dữ liệu đầu vào (chống XSS), giới hạn CORS, xác thực JWT, và rà soát lại checklist bảo mật tổng thể của hệ thống so với khuyến nghị production.
 
-### 3.1. Input Validation Testing
+### 1. Kiểm thử Input Validation
 
-**Validation Rules Table:**
+**Bảng quy tắc kiểm tra dữ liệu đầu vào:**
 
-| Field | Valid Examples | Invalid Examples | Error Message |
+| Trường | Ví dụ hợp lệ | Ví dụ không hợp lệ | Thông báo lỗi |
 |-------|----------------|------------------|---------------|
 | **Phone** | 0901234567 → +84901234567<br/>+84901234567 (E.164) | "123456" (too short)<br/>"+1234567890" (non-VN)<br/>"abcdefghij" (non-digit) | "Invalid phone format"<br/>"Only Vietnam (+84) supported"<br/>"Phone must contain digits" |
 | **DOB** | 1990-01-15<br/>1900-01-01 (minimum)<br/>2026-12-31 (maximum) | 2027-01-01 (future)<br/>1899-12-31 (too old)<br/>1990-13-45 (invalid date) | "DOB cannot be in the future"<br/>"DOB must be after 1900"<br/>"Invalid date format" |
 | **Fullname** | "Nguyen Van A"<br/>"Trần Thị Bích Ngọc" (unicode)<br/>"John Doe" | "A" (< 2 chars)<br/>`<script>alert(1)</script>` (XSS)<br/>"x" × 101 (> 100 chars)<br/>"" (empty) | "Min 2 chars"<br/>"XSS prevention"<br/>"Max 100 chars"<br/>"Fullname required" |
 
-**Unit Test Coverage:**
-- `backend/test_validators_unit.py` → **50+ tests** covering edge cases
-  - TestPhoneValidation (15 tests)
-  - TestDOBValidation (12 tests)
-  - TestFullnameValidation (10 tests)
-  - TestEdgeCases (13 tests)
+**Độ phủ unit test:**
+- `backend/test_validators_unit.py` → **50+ test** bao phủ các edge case
+  - TestPhoneValidation (15 test)
+  - TestDOBValidation (12 test)
+  - TestFullnameValidation (10 test)
+  - TestEdgeCases (13 test)
 
-**Run tests:** `cd backend/ && pytest test_validators_unit.py -v`
+**Chạy test:** `cd backend/ && pytest test_validators_unit.py -v`
 
 ---
 
-### 3.2. CORS & JWT Testing
+### 2. Kiểm thử CORS & JWT
 
-**Test Summary Table:**
+**Bảng tổng hợp test case:**
 
 | # | Test Case | Input | Expected Result | Status |
 |---|-----------|-------|-----------------|--------|
@@ -45,7 +45,7 @@ pre : " <b> 5.5.3 </b> "
 | 3.6 | Expired JWT token | JWT with exp < current time | 401 Unauthorized<br/>Error: "JWT token has expired" | PASS |
 | 3.7 | JWT from different pool | JWT signed by wrong Cognito pool | 401 Unauthorized<br/>Error: "Invalid JWT issuer" | PASS |
 
-**JWT Validation Flow in Lambda:**
+**Luồng xác thực JWT trong Lambda:**
 ```python
 # modules/auth_service.py
 def validate_jwt(token: str) -> dict:
@@ -57,38 +57,67 @@ def validate_jwt(token: str) -> dict:
     # 6. Return decoded claims (user_id, email, etc.)
 ```
 
-**CORS Security Notes:**
-- **[YES]** Fixed: CORS wildcard `*` removed
-- **[YES]** Only 3 origins allowed: CloudFront + localhost:5173 + localhost:5174
-- **[NOTE]** Production: Remove localhost origins before deploy
+**Ghi chú về CORS:**
+- **[YES]** Đã fix: bỏ wildcard CORS `*`
+- **[YES]** Chỉ cho phép 3 origin: CloudFront + localhost:5173 + localhost:5174
+- **[NOTE]** Production: nên bỏ các origin localhost trước khi deploy thật
 
 ---
 
-### 3.3. Security Audit Checklist
+### 3. Kiểm thử CSRF State Parameter (Google OAuth)
 
-Reference: `SECURITY_CONSIDERATIONS.md`
+Luồng đăng nhập Google qua Cognito Hosted UI trước đây không có tham số `state`, cho phép attacker dụ nạn nhân click 1 link chứa authorization code do attacker tạo sẵn (Login CSRF). Đã bổ sung `state = crypto.randomUUID()` sinh ở Frontend, lưu tạm `sessionStorage`, verify khi Cognito redirect về `/auth/callback`.
 
-| Security Control | Status | Notes |
+**Test case đã thực hiện trên production:**
+
+| # | Test Case | Cách thực hiện | Kết quả mong đợi | Status |
+|---|-----------|-----------------|-------------------|--------|
+| 1 | Login Google bình thường | Đăng nhập qua tab ẩn danh | Vào `/app` thành công | PASS |
+| 2 | `state` xuất hiện trong URL | DevTools Network → check request `/oauth2/authorize` | Có `state=<UUID>` | PASS |
+| 3 | `state` sai (giả lập CSRF) | Sửa tay `state` trong URL callback | Redirect `/login` + báo lỗi, không gọi tới Cognito | PASS |
+| 4 | `state` đúng nhưng `code` giả | Dùng đúng `state` thật + `code` giả | Qua được tầng 1 (state), bị Cognito từ chối ở tầng 2 (invalid_grant) | PASS |
+| 5 | sessionStorage tự dọn dẹp | Kiểm tra `oauth_state` sau mỗi lần verify | Key bị xóa (chống replay) | PASS |
+
+**Cơ chế 2 tầng bảo vệ độc lập:**
+
+```mermaid
+flowchart LR
+    A[Request tới /auth/callback] --> B{state khớp sessionStorage?}
+    B -->|Sai/thiếu| C["Chặn ngay - Tầng 1: state UUID"]
+    B -->|Đúng| D{code hợp lệ với Cognito?}
+    D -->|Giả/đã dùng/hết hạn| E["Chặn - Tầng 2: Cognito single-use code"]
+    D -->|Hợp lệ| F[Đăng nhập thành công]
+```
+
+Chi tiết đầy đủ tham khảo `BANGIAO-23-07-2026.md` (mục 2.3).
+
+---
+
+### 4. Rà soát checklist bảo mật
+
+Tham khảo: `SECURITY_CONSIDERATIONS.md`
+
+| Hạng mục bảo mật | Trạng thái | Ghi chú |
 |-----------------|--------|-------|
-| **Authentication** | **Implemented** | Cognito JWT tokens |
-| **Authorization** | **Implemented** | Per-user data isolation |
-| **Input validation** | **Implemented** | Phone, DOB, fullname validators |
-| **XSS prevention** | **Implemented** | `<script>` tag blocked in fullname |
-| **CORS restrictions** | **Fixed** | Wildcard removed (commit xyz) |
-| **HTTPS only** | **Enforced** | TLS 1.2+ on CloudFront/API Gateway |
-| **SQL injection** | **N/A** | No SQL database (DynamoDB) |
-| **Rate limiting** | **Not implemented** | 10K RPS API Gateway default |
-| **Encryption at rest** | **Not enabled** | S3/DynamoDB no KMS encryption |
-| **VPC isolation** | **Not configured** | Lambda in public internet |
-| **OAuth state param** | **Missing** | CSRF risk in Google OAuth |
-| **MFA** | **Disabled** | Can enable in Cognito |
+| **Xác thực (Authentication)** | **Đã triển khai** | Cognito JWT token |
+| **Phân quyền (Authorization)** | **Đã triển khai** | Cô lập dữ liệu theo từng user |
+| **Validate đầu vào** | **Đã triển khai** | Validator cho phone, DOB, fullname |
+| **Chống XSS** | **Đã triển khai** | Chặn thẻ `<script>` trong fullname |
+| **Giới hạn CORS** | **Đã fix** | Đã bỏ wildcard |
+| **CSRF protection (OAuth state)** | **Đã triển khai** (23/07/2026) | Xem mục 3 phía trên |
+| **Mã hóa DynamoDB (KMS)** | **Đã triển khai** (23/07/2026) | SSE-KMS, key `alias/aws/dynamodb` |
+| **Chỉ dùng HTTPS** | **Bắt buộc** | TLS 1.2+ trên CloudFront/API Gateway |
+| **SQL injection** | **Không áp dụng** | Không dùng SQL database (DynamoDB) |
+| **Rate limiting** | **Chưa triển khai** | Cognito đã có throttling/lockout built-in miễn phí; AWS WAF (~$5-10/tháng) chưa tương xứng với quy mô demo/thực tập hiện tại — khuyến nghị bổ sung khi lên production với traffic lớn hơn |
+| **Mã hóa dữ liệu lưu trữ** | **Đã triển khai (một phần)** | DynamoDB đã bật SSE-KMS; S3 giữ SSE-S3 mặc định (đã tự động mã hóa từ 2023) |
+| **Cô lập VPC** | **Chưa cấu hình** | Lambda chạy ngoài VPC (public) |
+| **OAuth state parameter** | **Đã triển khai** | Đã thêm state chống CSRF cho luồng Google OAuth |
+| **MFA** | **Chưa bật** | Có thể bật trong Cognito ở giai đoạn sau |
 
-**Production recommendations:**
-1. Enable S3/DynamoDB encryption (KMS)
-2. Add API Gateway resource policies (IP whitelist)
-3. Implement per-user rate limiting
-4. Enable Cognito MFA for sensitive operations
-5. Add OAuth state parameter
-6. Deploy Lambda in VPC with NAT Gateway
+**Khuyến nghị cho production:**
+1. Triển khai per-user rate limiting qua AWS WAF khi traffic tăng
+2. Thêm API Gateway resource policy (IP whitelist) cho các endpoint quản trị
+3. Bật Cognito MFA cho các thao tác nhạy cảm
+4. Triển khai Lambda trong VPC với NAT Gateway nếu cần cô lập network sâu hơn
 
 ---

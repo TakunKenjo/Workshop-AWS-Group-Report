@@ -88,9 +88,9 @@ pre : " <b> 5.3.6. </b> "
   - Response page path: Nhập ```/index.html```
   - HTTP Response code: Chọn ***200: OK***
   - Sau đó, nhấn ***Create custom error response***
-![create-first-custom-error](/images/5-Workshop/5.3-Frontend-deployment/5.3.6-accelerating-website-performance-with-cloudFront/create-first-custom-errorr.png)
+![create-first-custom-error](/images/5-Workshop/5.3-Frontend-deployment/5.3.6-accelerating-website-performance-with-cloudFront/create-first-custom-error.png)
   - Tạo tương tự cho Error response 2 với các thông tin như ảnh bên dưới
-![create-second-custom-error](/images/5-Workshop/5.3-Frontend-deployment/5.3.6-accelerating-website-performance-with-cloudFront/create-second-custom-errorr.png)
+![create-second-custom-error](/images/5-Workshop/5.3-Frontend-deployment/5.3.6-accelerating-website-performance-with-cloudFront/create-second-custom-error.png)
 - Kiểm tra các Error pages đã tạo
 ![check-list-custom-error](/images/5-Workshop/5.3-Frontend-deployment/5.3.6-accelerating-website-performance-with-cloudFront/check-list-custom-error.png)
 ### 5. Kiểm tra cấu hình Amazon Cloudfront

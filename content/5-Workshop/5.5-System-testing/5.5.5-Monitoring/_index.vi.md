@@ -1,14 +1,14 @@
 ---
-title : "Monitoring & Logging"
+title : "Giám sát & Nhật ký hệ thống"
 date : 2024-01-01
 weight : 5
 chapter : false
 pre : " <b> 5.5.5 </b> "
 ---
 
-## Monitoring & Logging Testing
+Phần này hướng dẫn cách theo dõi sức khỏe hệ thống SmartDocAI qua CloudWatch Logs và Metrics: đọc log thời gian thực, viết truy vấn Logs Insights để phân tích lỗi/hiệu năng, và kiểm tra các chỉ số Lambda quan trọng như số lần gọi, thời gian xử lý và tỷ lệ lỗi.
 
-### 5.1. CloudWatch Logs Overview
+### 1. Tổng quan CloudWatch Logs
 
 **Log Group:** `/aws/lambda/smartdocai`
 
@@ -20,9 +20,9 @@ pre : " <b> 5.5.5 </b> "
 - `ERROR` → Application errors
 - `Traceback` → Python exceptions
 
-**Tail logs command:** `aws logs tail /aws/lambda/smartdocai --follow --region us-east-1`
+**Lệnh xem log thời gian thực:** `aws logs tail /aws/lambda/smartdocai --follow --region us-east-1`
 
-**Sample log output:**
+**Ví dụ log thực tế:**
 ```
 2024-03-15T10:30:45.456Z [INFO] User login: test@example.com
 2024-03-15T10:30:45.789Z [INFO] JWT validated successfully
@@ -33,9 +33,9 @@ pre : " <b> 5.5.5 </b> "
 
 ---
 
-### 5.2. CloudWatch Insights Queries
+### 2. Truy vấn CloudWatch Insights
 
-| Query Name | Purpose | Query Code | Expected Output |
+| Tên truy vấn | Mục đích | Câu lệnh | Kết quả mong đợi |
 |------------|---------|------------|-----------------|
 | **Error Count (24h)** | Count errors by hour | `fields @timestamp, @message`<br/>`\| filter @message like /ERROR/`<br/>`\| stats count() as error_count by bin(1h)`<br/>`\| sort @timestamp desc` | Hourly error histogram (should be <1% of invocations) |
 | **Average Lambda Duration** | Performance metrics | `fields @duration`<br/>`\| stats avg(@duration) as avg_ms,`<br/>`max(@duration) as max_ms,`<br/>`pct(@duration, 99) as p99_ms` | avg: 500-5000ms, max: <10s, p99: <8s |
@@ -45,17 +45,17 @@ pre : " <b> 5.5.5 </b> "
 
 ---
 
-### 5.3. Lambda Metrics
+### 3. Chỉ số Lambda (Metrics)
 
-**AWS CloudWatch Metrics Table:**
+**Bảng các chỉ số CloudWatch:**
 
-| Metric | AWS CLI Command | Expected Value (Healthy System) |
+| Chỉ số | Command AWS CLI | Giá trị mong đợi (hệ thống khỏe mạnh) |
 |--------|-----------------|----------------------------------|
 | **Invocations** | `aws cloudwatch get-metric-statistics`<br/>`--namespace AWS/Lambda --metric-name Invocations`<br/>`--dimensions Name=FunctionName,Value=smartdocai`<br/>`--start-time <1h ago> --period 300 --statistics Sum` | 100-1000/hour (depends on traffic) |
 | **Errors** | `aws cloudwatch get-metric-statistics`<br/>`--namespace AWS/Lambda --metric-name Errors`<br/>`--dimensions Name=FunctionName,Value=smartdocai`<br/>`--start-time <1h ago> --period 300 --statistics Sum` | <1% of total invocations |
 | **Throttles** | `aws cloudwatch get-metric-statistics`<br/>`--namespace AWS/Lambda --metric-name Throttles`<br/>`--dimensions Name=FunctionName,Value=smartdocai`<br/>`--start-time <1h ago> --period 300 --statistics Sum` | 0 (should never throttle with provisioned concurrency) |
 | **Duration** | `aws cloudwatch get-metric-statistics`<br/>`--namespace AWS/Lambda --metric-name Duration`<br/>`--dimensions Name=FunctionName,Value=smartdocai`<br/>`--start-time <1h ago> --period 300 --statistics Average,Max` | Avg: 500ms-5s<br/>Cold start: 2-3s<br/>Warm: <1s |
 
-**Note:** Replace `<1h ago>` with actual timestamp format: `$(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%S)`
+**Lưu ý:** Thay `<1h ago>` bằng timestamp thực tế theo định dạng: `$(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%S)`
 
 ---

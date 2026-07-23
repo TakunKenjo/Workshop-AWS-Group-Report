@@ -1,46 +1,46 @@
 ---
-title : "Cleanup Resources"
+title : "Dọn dẹp tài nguyên"
 date : 2024-01-01
 weight : 2
 chapter : false
 pre : " <b> 5.6.2 </b> "
 ---
 
-## Dọn dẹp tài nguyên AWS
+### **CẢNH BÁO:** Quan trọng - Đọc trước khi xóa
 
-### **WARNING:** QUAN TRỌNG - Đọc trước khi xóa
-
-**CẢNH BÁO:**
-- **[NO] DATA LOSS:** Xóa tài nguyên sẽ **MẤT HẾT DỮ LIỆU** (user profiles, documents, logs)
+- **[NO] MẤT DỮ LIỆU:** Xóa tài nguyên sẽ **MẤT HẾT DỮ LIỆU** (hồ sơ người dùng, tài liệu, logs)
 - **[NO] KHÔNG THỂ PHỤC HỒI:** Không có backup/snapshot được tạo trong workshop này
-- **[YES]** Nếu muốn giữ lại data:
-  - Export DynamoDB table trước khi xóa
-  - Download S3 objects (documents + avatars)
-  - Export CloudWatch logs nếu cần analyze
+- **[YES]** Nếu muốn giữ lại dữ liệu:
+  - Export bảng DynamoDB trước khi xóa
+  - Tải các object trên S3 (tài liệu + avatar)
+  - Export CloudWatch logs nếu cần phân tích thêm
 
 ---
 
-### Cleanup Flow - Thứ tự xóa tài nguyên
+### Quy trình dọn dẹp - Thứ tự xóa tài nguyên
 
-**Flowchart:** 3 phases cleanup (Stop Traffic → Remove Compute → Delete Data)
+**Sơ đồ:** 3 giai đoạn dọn dẹp (Dừng traffic → Gỡ compute → Xóa dữ liệu)
 
 <img src="/images/5-Workshop/5.6-Conclusion/cleanup-resources-flow.png" width="75%" style="max-width:1000px">
 
-**Cleanup Summary:**
+**Tóm tắt các giai đoạn:**
 
-| Phase | Resources | Key Actions | Time |
+| Giai đoạn | Tài nguyên | Hành động chính | Thời gian |
 |-------|-----------|-------------|------|
-| **Phase 1: Stop Traffic** | EventBridge, CloudFront, API Gateway | Disable rule → Disable CloudFront (⏱️ wait 30min) → Delete API Gateway | ~35 min |
-| **Phase 2: Remove Compute** | CodePipeline, CodeBuild, Lambda, ECR | Delete CI/CD pipeline → Delete Lambda function → Delete Docker images | ~5 min |
-| **Phase 3: Delete Data** | S3 Buckets (2), DynamoDB, Cognito, IAM | Empty S3 → Delete buckets → Delete user data → Delete permissions | ~5 min |
+| **Giai đoạn 1: Dừng traffic** | EventBridge, CloudFront, API Gateway | Tắt rule → Tắt CloudFront (⏱️ chờ 30 phút) → Xóa API Gateway | ~35 phút |
+| **Giai đoạn 2: Gỡ compute** | CodePipeline, CodeBuild, Lambda, ECR | Xóa CI/CD pipeline → Xóa Lambda function → Xóa Docker image | ~5 phút |
+| **Giai đoạn 3: Xóa dữ liệu** | S3 Buckets (2), DynamoDB, Cognito, IAM | Làm rỗng S3 → Xóa bucket → Xóa dữ liệu user → Xóa quyền | ~5 phút |
+| **Giai đoạn 4: Giám sát (mới 23/07)** | CloudWatch Alarms, SNS Topic | Xóa 4 alarms → Xóa SNS topic + subscription | ~2 phút |
 
-**Total Time:** ~45 minutes (chủ yếu chờ CloudFront disable)
+**Tổng thời gian:** ~47 phút (chủ yếu chờ CloudFront disable)
+
+> **Lưu ý:** Lifecycle rule S3 Intelligent-Tiering và cấu hình SSE-KMS trên DynamoDB **không cần xóa riêng** — chúng tự động biến mất khi xóa hẳn bucket/table ở Giai đoạn 3.
 
 ---
 
-### Example: Delete Resources với AWS CLI
+### Ví dụ: Xóa tài nguyên bằng AWS CLI
 
-**1. Delete EventBridge Rule:**
+**1. Xóa EventBridge Rule:**
 ```powershell
 # Disable rule
 aws events disable-rule --name smartdocai-cleanup-unconfirmed --region us-east-1
@@ -52,7 +52,7 @@ aws events remove-targets --rule smartdocai-cleanup-unconfirmed --ids "1" --regi
 aws events delete-rule --name smartdocai-cleanup-unconfirmed --region us-east-1
 ```
 
-**2. Delete CloudFront (requires 30+ min wait):**
+**2. Xóa CloudFront (cần chờ 30+ phút):**
 ```powershell
 $distId = "E1234ABCD5678"  # Replace with your distribution ID
 aws cloudfront get-distribution-config --id $distId --output json > dist-config.json
@@ -62,19 +62,19 @@ aws cloudfront update-distribution --id $distId --if-match <ETag> --distribution
 aws cloudfront delete-distribution --id $distId --if-match <new-ETag>
 ```
 
-**3. Empty & Delete S3 Bucket:**
+**3. Làm rỗng & xóa S3 Bucket:**
 ```powershell
 $bucket = "smartdocai-storage-623035187993"
 aws s3 rm s3://$bucket --recursive --region us-east-1  # Empty bucket
 aws s3api delete-bucket --bucket $bucket --region us-east-1  # Delete bucket
 ```
 
-**4. Delete Lambda Function:**
+**4. Xóa Lambda Function:**
 ```powershell
 aws lambda delete-function --function-name smartdocai --region us-east-1
 ```
 
-**5. Delete DynamoDB Table (with backup):**
+**5. Xóa bảng DynamoDB (có backup):**
 ```powershell
 # Optional: Backup first
 aws dynamodb scan --table-name smartdocai-user-profiles --region us-east-1 > backup.json
@@ -82,20 +82,25 @@ aws dynamodb scan --table-name smartdocai-user-profiles --region us-east-1 > bac
 aws dynamodb delete-table --table-name smartdocai-user-profiles --region us-east-1
 ```
 
-**6. Delete Cognito User Pool:**
+**6. Xóa Cognito User Pool:**
 ```powershell
 aws cognito-idp delete-user-pool --user-pool-id us-east-1_3oq5wIiuu --region us-east-1
 ```
 
-**Full list of commands:** Tham khảo AWS Documentation hoặc file `CLEANUP_GUIDE.md` trong source code
+**7. Xóa CloudWatch Alarms + SNS Topic (mới 23/07):**
+```powershell
+# Xóa 4 alarms
+aws cloudwatch delete-alarms --alarm-names smartdocai-lambda-errors smartdocai-lambda-duration smartdocai-lambda-throttles smartdocai-apigateway-5xx --region us-east-1
+
+# Xóa SNS topic (tự động xóa luôn các subscription đính kèm)
+aws sns delete-topic --topic-arn arn:aws:sns:us-east-1:623035187993:smartdocai-alerts --region us-east-1
+```
+
+**Toàn bộ danh sách lệnh:** Tham khảo AWS Documentation hoặc file `CLEANUP_GUIDE.md` trong source code
 
 ---
 
-## Verify Cleanup Completed
-
-**Check AWS Console manually:**
-
-## Verify Cleanup Completed
+## Kiểm tra xác nhận đã dọn dẹp xong
 
 **Checklist:**
 
@@ -141,13 +146,13 @@ aws iam list-roles | Select-String "smartdocai"
 # Expected: No results
 ```
 
-**Expected final state:** Tất cả commands trên trả về empty/no results
+**Trạng thái cuối cùng mong đợi:** Tất cả các lệnh trên trả về kết quả rỗng/không tìm thấy
 
 ---
 
-## Billing Estimate After Cleanup
+## Ước tính chi phí sau khi dọn dẹp
 
-**Remaining charges (nếu có):**
+**Các khoản phí còn lại (nếu có):**
 - CloudFront distribution (nếu chưa xóa): ~$0.01/day
 - CloudWatch Logs (nếu chưa xóa): ~$0.001/day per GB stored
 - S3 Glacier transitions (nếu có lifecycle policy): Varies

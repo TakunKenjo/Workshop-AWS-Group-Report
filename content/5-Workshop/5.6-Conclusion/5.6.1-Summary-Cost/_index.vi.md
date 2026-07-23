@@ -1,12 +1,10 @@
 ---
-title : "Workshop Summary & Cost"
+title : "Tổng kết Workshop & Chi phí"
 date : 2024-01-01
 weight : 1
 chapter : false
 pre : " <b> 5.6.1 </b> "
 ---
-
-## Tổng kết Workshop
 
 Xin chúc mừng! Bạn đã hoàn thành việc triển khai và testing hệ thống **SmartDocAI** trên AWS với kiến trúc serverless đầy đủ.
 
@@ -60,11 +58,11 @@ Xin chúc mừng! Bạn đã hoàn thành việc triển khai và testing hệ t
 
 ## Cost Summary - Tổng chi phí
 
-### Chi phí thực tế đã phát sinh (Workshop Duration)
+### Chi phí thực tế đã phát sinh (trong suốt thời gian workshop)
 
-Giả sử workshop chạy trong **7 ngày** với moderate testing:
+Giả sử workshop chạy trong **7 ngày** với mức độ test vừa phải:
 
-| Dịch vụ | Usage | Chi phí (7 days) | Chi phí (Monthly estimate) |
+| Dịch vụ | Mức sử dụng | Chi phí (7 ngày) | Chi phí ước tính (theo tháng) |
 |---------|-------|------------------|---------------------------|
 | Lambda | 5K invocations, 2GB RAM, 5s avg | $0.20 | $0.85 |
 | API Gateway | 5K requests | $0.02 | $0.08 |
@@ -82,10 +80,10 @@ Giả sử workshop chạy trong **7 ngày** với moderate testing:
 | CloudWatch Logs | 0.5 GB ingested | $0.25 | $1.00 |
 | **TOTAL** | | **~$1.37** | **~$4.71** |
 
-**Notes:**
-- **[YES]** Workshop cost: **Dưới $2** (rất low cost)
-- **[YES]** Free Tier: Cognito, EventBridge, CodePipeline, CloudFront (1 TB) đều free
-- **[NOTE]** Lambda provisioned concurrency (optional): +$4/month nếu enable
-- **[NOTE]** Production cost với higher traffic: $15-50/month
+**Ghi chú:**
+- **[YES]** Chi phí workshop: **Dưới $2** (rất thấp)
+- **[YES]** Free Tier: Cognito, EventBridge, CodePipeline, CloudFront (1 TB) đều miễn phí
+- **[NOTE]** Lambda provisioned concurrency (tùy chọn): +$4/tháng nếu bật
+- **[NOTE]** Chi phí production với traffic cao hơn: $15-50/tháng
 
 ---
