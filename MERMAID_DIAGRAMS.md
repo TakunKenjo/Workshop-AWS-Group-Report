@@ -13,7 +13,9 @@
 
 ## 1. Architecture Diagram
 
-**File path:** `static/images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png`
+**File path:** `static/images/5-Workshop/5.1-Workshop-overview/5.1.3-overall-aws-architecture/architecture-diagram.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Ảnh cũ đang dùng trên website ghi sai tên bucket Frontend (`smartdocai-frontend-...` → đúng phải là `aws-smartdocsai-cloud`) và sai model LLM (`Mixtral 8x7B` → đúng phải là `Qwen3-Next 80B-A3B`, đã xác nhận qua response thật `/api/status`). **Cần generate lại ảnh và thay thế file cũ.**
 
 **Mermaid code:**
 
@@ -28,7 +30,7 @@ graph TB
     end
 
     subgraph "Static Hosting"
-        C[S3 Frontend Bucket<br/>smartdocai-frontend-...]
+        C[S3 Frontend Bucket<br/>aws-smartdocsai-cloud]
     end
 
     subgraph "API Layer"
@@ -49,11 +51,11 @@ graph TB
 
     subgraph "Storage Layer"
         H[S3 Storage Bucket<br/>smartdocai-storage-...<br/>Documents + Avatars]
-        I[DynamoDB Table<br/>smartdocai-user-profiles<br/>User metadata]
+        I[DynamoDB Table<br/>smartdocai-user-profiles<br/>avatar_url only, SSE-KMS]
     end
 
     subgraph "AI Services"
-        J[Amazon Bedrock<br/>Mixtral 8x7B LLM<br/>Titan Embeddings V2]
+        J[Amazon Bedrock<br/>Qwen3-Next 80B-A3B LLM<br/>Titan Embeddings V2]
     end
 
     subgraph "Container Registry"
@@ -67,7 +69,8 @@ graph TB
     end
 
     subgraph "Monitoring"
-        O[CloudWatch Logs<br/>/aws/lambda/smartdocai]
+        O[CloudWatch Logs + Alarms<br/>/aws/lambda/smartdocai]
+        P[SNS Topic<br/>smartdocai-alerts]
     end
 
     %% User flow
@@ -85,6 +88,7 @@ graph TB
     E -->|Query/Update Profile| I
     E -->|RAG Processing| J
     E -->|Write Logs| O
+    O -->|Alarm triggers| P
     
     %% CI/CD flow
     N -->|Push to main| L
@@ -105,19 +109,20 @@ graph TB
 
 **File path:** `static/images/5-Workshop/5.1-Workshop-overview/auth-flow.png`
 
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Ảnh cũ vẽ sai hoàn toàn luồng Login — cho rằng login đi qua Lambda gọi `initiate_auth()`. Thực tế đã xác nhận: **login chạy 100% ở Frontend** qua thư viện `amazon-cognito-identity-js` bằng giao thức SRP, gọi thẳng Cognito, **không qua Lambda/backend**. Token lưu ở `sessionStorage` (không phải `localStorage`, để mỗi tab có session độc lập). Registration/Confirmation vẫn giữ nguyên vì đúng với 2 endpoint thật `/api/auth/register` và `/api/auth/confirm-signup`.
+
 **Mermaid code:**
 
 ```mermaid
 sequenceDiagram
-    participant U as User Browser
+    participant U as User Browser (React)
     participant CF as CloudFront
     participant AG as API Gateway
     participant L as Lambda
     participant C as Cognito
-    participant DB as DynamoDB
     
-    Note over U,DB: 1. REGISTRATION
-    U->>CF: POST /auth/register<br/>(email, password, fullname, phone, DOB)
+    Note over U,L: 1. REGISTRATION (qua Backend)
+    U->>CF: POST /api/auth/register<br/>(email, password, fullname, phone, DOB)
     CF->>AG: Forward request
     AG->>L: Invoke Lambda
     L->>L: Validate inputs<br/>(phone +84, DOB 1900-2026, XSS check)
@@ -126,22 +131,20 @@ sequenceDiagram
     C->>U: Send verification code via email
     L-->>U: 200 OK (User created)
     
-    Note over U,DB: 2. EMAIL CONFIRMATION
-    U->>AG: POST /auth/confirm-signup<br/>(email, code)
+    Note over U,L: 2. EMAIL CONFIRMATION (qua Backend)
+    U->>AG: POST /api/auth/confirm-signup<br/>(email, code)
     AG->>L: Invoke Lambda
     L->>C: confirm_sign_up(code)
     C-->>L: Status: CONFIRMED
-    L->>DB: Create profile record
-    DB-->>L: Profile created
     L-->>U: 200 OK (Confirmed)
     
-    Note over U,DB: 3. LOGIN
-    U->>AG: POST /auth/login<br/>(email, password)
-    AG->>L: Invoke Lambda
-    L->>C: initiate_auth()
-    C-->>L: JWT tokens (ID + Access)
-    L-->>U: 200 OK + JWT tokens
-    U->>U: Store tokens in localStorage
+    Note over U,C: 3. LOGIN (client-side, KHÔNG qua Lambda)
+    U->>C: authenticateUser() — amazon-cognito-identity-js<br/>Giao thức SRP (Secure Remote Password)
+    C-->>U: id_token + access_token + refresh_token
+    U->>U: Lưu token vào sessionStorage<br/>(per-tab, không phải localStorage)
+    U->>AG: GET /api/profile (Bearer id_token)
+    AG->>L: Invoke Lambda (verify JWT signature qua Cognito JWKS)
+    L-->>U: Profile data
 ```
 
 ---
@@ -149,6 +152,8 @@ sequenceDiagram
 ## 3. Document Upload & RAG Query Flow
 
 **File path:** `static/images/5-Workshop/5.1-Workshop-overview/rag-flow.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Endpoint thiếu tiền tố `/api/` và sai tên route (`GET /documents/upload-url` → đúng phải là `POST /api/upload-url`; `POST /documents` → đúng phải là `POST /api/process`; `/chat` → `/api/chat`). Model sai (`Mixtral` → `Qwen3-Next 80B-A3B`).
 
 **Mermaid code:**
 
@@ -158,21 +163,21 @@ sequenceDiagram
     participant L as Lambda
     participant S3 as S3 Storage
     participant F as FAISS Vector DB
-    participant B as Bedrock<br/>(Titan + Mixtral)
+    participant B as Bedrock<br/>(Titan V2 + Qwen3-Next 80B-A3B)
     
     Note over U,B: 1. DOCUMENT UPLOAD
-    U->>L: GET /documents/upload-url
+    U->>L: POST /api/upload-url<br/>(filename, content_type)
     L->>S3: Generate presigned URL (1h expiry)
     S3-->>L: Presigned URL
-    L-->>U: Return presigned URL
+    L-->>U: Return presigned URL + s3_key
     U->>S3: PUT file directly to S3<br/>(bypass Lambda)
     S3-->>U: Upload complete
     
     Note over U,B: 2. DOCUMENT INDEXING
-    U->>L: POST /documents<br/>(notify about new file)
+    U->>L: POST /api/process<br/>(filename, s3_key)
     L->>S3: Download document
     S3-->>L: PDF/DOCX file
-    L->>L: Parse content (PDF→text)
+    L->>L: Parse content (pypdf)
     L->>L: Chunk text<br/>(500 tokens, 50 overlap)
     L->>B: Generate embeddings (Titan V2)
     B-->>L: Vector embeddings (1024-dim)
@@ -181,10 +186,10 @@ sequenceDiagram
     L-->>U: 200 OK (Document indexed)
     
     Note over U,B: 3. RAG QUERY
-    U->>L: POST /chat<br/>(query: "What is X?")
+    U->>L: POST /api/chat<br/>(message: "What is X?")
     L->>F: Semantic search (retrieve top-k chunks)
     F-->>L: Relevant chunks
-    L->>B: Prompt: Context + Query<br/>(Mixtral 8x7B)
+    L->>B: Prompt: Context + Query<br/>(Qwen3-Next 80B-A3B)
     B-->>L: Generated answer
     L-->>U: 200 OK + answer + sources
 ```
@@ -236,23 +241,27 @@ sequenceDiagram
 
 ## Checklist sau khi export:
 
-- [ ] architecture-diagram.png (14 AWS services)
-- [ ] auth-flow.png (Registration → Confirmation → Login)
-- [ ] rag-flow.png (Upload → Indexing → Query)
-- [ ] eventbridge-cleanup.png (Scheduled cleanup)
-- [ ] lambda-modules.png (Lambda code structure tree)
-- [ ] cicd-pipeline.png (GitHub → CodePipeline → CodeBuild → ECR → Lambda)
-- [ ] three-tier-architecture.png (3-tier layering model)
-- [ ] storage-structure.png (S3 + DynamoDB data model)
-- [ ] rag-pipeline-simple.png (6-step RAG process flowchart)
-- [ ] cleanup-resources-flow.png (3-phase simplified cleanup flow)
-- [ ] Copy tất cả vào: `static/images/5-Workshop/5.1-Workshop-overview/`
+**⚠️ Ưu tiên generate lại 6 ảnh dưới đây — code Mermaid đã được sửa ngày 24/07/2026, ảnh cũ đang hiển thị sai thông tin trên website:**
+
+- [ ] `architecture-diagram.png` ⚠️ ĐÃ SỬA — đang dùng live ở 5.1.3, sai bucket + sai model, cần generate lại ngay
+- [ ] `auth-flow.png` ⚠️ ĐÃ SỬA — chưa nhúng vào content, sửa lại toàn bộ luồng login
+- [ ] `rag-flow.png` ⚠️ ĐÃ SỬA — chưa nhúng vào content, sửa endpoint + model
+- [ ] `eventbridge-cleanup.png` — không đổi, đã đúng, có thể generate/dùng bất kỳ lúc nào
+- [ ] `lambda-modules.png` ⚠️ ĐÃ SỬA — đang dùng live ở 5.1.3, thêm module co_rag.py
+- [ ] `cicd-pipeline.png` — không đổi, đã đúng
+- [ ] `three-tier-architecture.png` — không đổi, đã đúng
+- [ ] `storage-structure.png` ⚠️ ĐÃ SỬA — đang dùng live ở 5.1.3, sai cấu trúc S3 + DynamoDB, cần generate lại ngay
+- [ ] `rag-pipeline-simple.png` ⚠️ ĐÃ SỬA — chưa nhúng vào content, sửa model
+- [ ] `cleanup-resources-flow.png` ⚠️ ĐÃ SỬA — đang dùng live ở 5.6.2, thêm Phase 4 (Alarms/SNS)
+- [ ] Copy tất cả vào đúng subfolder tương ứng (`5.1.3-overall-aws-architecture/`, `5.1.4-aws-services-used/`, hoặc `5.6-Conclusion/`)
 
 ---
 
 ## 10. AWS Resources Cleanup Flow (Simplified)
 
 **File path:** `static/images/5-Workshop/5.6-Conclusion/cleanup-resources-flow.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Ảnh cũ đang dùng trên website thiếu Giai đoạn 4 (xóa CloudWatch Alarms + SNS Topic) — 2 resource này mới được tạo thêm ngày 23/07/2026, chưa có lúc vẽ ảnh gốc. Đã bổ sung Phase 4.
 
 **Mermaid code:**
 
@@ -286,7 +295,15 @@ flowchart LR
         D1 --> D2 --> D3 --> D4
     end
     
-    Phase3 --> Verify{Verify<br/>All Deleted?}
+    Phase3 --> Phase4
+    
+    subgraph Phase4["Phase 4: Remove Monitoring<br/>(2 min)"]
+        M1[CloudWatch Alarms x4]
+        M2[SNS Topic + Subscription]
+        M1 --> M2
+    end
+    
+    Phase4 --> Verify{Verify<br/>All Deleted?}
     Verify -->|Yes| Done([✅ Complete])
     Verify -->|No| Error[Check Dependencies]
     Error --> Phase1
@@ -295,6 +312,7 @@ flowchart LR
     style Phase1 fill:#ffccff,stroke:#ff66cc,stroke-width:3px
     style Phase2 fill:#ffffcc,stroke:#ffcc00,stroke-width:3px
     style Phase3 fill:#ccffcc,stroke:#66cc66,stroke-width:3px
+    style Phase4 fill:#cceeff,stroke:#3399ff,stroke-width:3px
     style E2 fill:#ff9999
     style Done fill:#66ff66
     style Error fill:#ffcccc
@@ -304,7 +322,9 @@ flowchart LR
 
 ## 5. Lambda Modules Structure
 
-**File path:** `static/images/5-Workshop/5.1-Workshop-overview/lambda-modules.png`
+**File path:** `static/images/5-Workshop/5.1-Workshop-overview/5.1.3-overall-aws-architecture/lambda-modules.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Ảnh cũ đang dùng trên website thiếu module `co_rag.py` (Co-RAG là 1 trong 3 chế độ RAG chính của hệ thống). Đã bổ sung.
 
 **Mermaid code:**
 
@@ -324,8 +344,9 @@ graph TB
         H["profile_service.py<br/>DynamoDB CRUD"]
         I["document_processor.py<br/>PDF/DOCX parsing"]
         J["vector_store.py<br/>FAISS vector DB"]
-        K["rag_chain.py<br/>LangChain RAG pipeline"]
+        K["rag_chain.py<br/>Standard RAG pipeline"]
         L["self_rag.py<br/>Self-correcting RAG"]
+        M["co_rag.py<br/>Collaborative Multi-Agent RAG"]
     end
     
     B -.-> G
@@ -333,6 +354,7 @@ graph TB
     C -.-> J
     D -.-> K
     D -.-> L
+    D -.-> M
     E -.-> H
     F -.-> G
     
@@ -348,7 +370,7 @@ graph TB
 
 ## 6. CI/CD Pipeline Flow
 
-**File path:** `static/images/5-Workshop/5.1-Workshop-overview/cicd-pipeline.png`
+**File path:** `static/images/5-Workshop/5.1-Workshop-overview/5.1.3-overall-aws-architecture/cicd-pipeline.png`
 
 **Mermaid code:**
 
@@ -378,7 +400,7 @@ graph LR
 
 ## 7. Three-Tier Architecture
 
-**File path:** `static/images/5-Workshop/5.1-Workshop-overview/three-tier-architecture.png`
+**File path:** `static/images/5-Workshop/5.1-Workshop-overview/5.1.3-overall-aws-architecture/three-tier-architecture.png`
 
 **Mermaid code:**
 
@@ -426,7 +448,9 @@ graph TB
 
 ## 8. Storage Structure (S3 + DynamoDB Data Model)
 
-**File path:** `static/images/5-Workshop/5.1-Workshop-overview/storage-structure.png`
+**File path:** `static/images/5-Workshop/5.1-Workshop-overview/5.1.3-overall-aws-architecture/storage-structure.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Ảnh cũ đang dùng trên website sai cấu trúc S3 (thiếu `vectorstore/`, `chat_history/`, `processed_files/`; path thật không phải `/users/{user_id}/documents/`) và sai nội dung DynamoDB (ảnh cũ ghi lưu `email, fullname, phone, dob` — nhưng code thật `dynamo_storage.py` xác nhận **chỉ lưu `avatar_url`**, các field còn lại nằm trong Cognito attributes để tránh 2 nơi lưu bị lệch dữ liệu).
 
 **Mermaid code:**
 
@@ -434,29 +458,34 @@ graph TB
 graph TB
     subgraph "S3 Bucket: smartdocai-storage-623035187993"
         S3["/"]
-        S3 --> U1["/users/{user_id}/"]
-        U1 --> D1["/documents/"]
-        U1 --> A1["/avatar/"]
-        D1 --> F1["document1.pdf<br/>document2.docx<br/>..."]
-        A1 --> F2["profile.jpg"]
+        S3 --> U1["uploads/{user_id}/"]
+        S3 --> U2["vectorstore/{user_id}/"]
+        S3 --> U3["chat_history/{user_id}.json"]
+        S3 --> U4["processed_files/{user_id}.json"]
+        S3 --> U5["avatars/{user_id}.jpg"]
+        U1 --> F1["document1.pdf<br/>document2.docx<br/>..."]
+        U2 --> F2["index.faiss<br/>index.pkl<br/>(1024-dim vectors)"]
     end
     
     subgraph "DynamoDB Table: smartdocai-user-profiles"
         DB[Partition Key: user_id]
-        DB --> ATTR["Attributes:<br/>• email<br/>• fullname<br/>• phone (+84...)<br/>• dob (YYYY-MM-DD)<br/>• avatar_url<br/>• created_at<br/>• updated_at"]
+        DB --> ATTR["Attributes:<br/>• avatar_url (String/null)<br/>• updated_at (ISO 8601)<br/><br/>Chỉ 2 field — encryption SSE-KMS"]
     end
     
     subgraph "Cognito User Pool: us-east-1_3oq5wIiuu"
-        COG["User Attributes:<br/>• sub (UUID)<br/>• email<br/>• email_verified<br/>• custom:fullname<br/>• custom:phone<br/>• custom:dob"]
+        COG["User Attributes (nguồn thật của thông tin cá nhân):<br/>• sub (UUID) = user_id<br/>• email<br/>• name (fullname)<br/>• phone_number<br/>• birthdate"]
     end
     
     COG -.->|user_id = sub| DB
-    DB -.->|avatar_url references| A1
+    COG -.->|user_id = sub| S3
+    DB -.->|avatar_url trỏ tới| U5
     
     style S3 fill:#ccffcc
     style U1 fill:#e1f5ff
-    style D1 fill:#ffffcc
-    style A1 fill:#ffffcc
+    style U2 fill:#e1f5ff
+    style U3 fill:#e1f5ff
+    style U4 fill:#e1f5ff
+    style U5 fill:#ffffcc
     style DB fill:#ff9999
     style COG fill:#ffccff
 ```
@@ -466,6 +495,8 @@ graph TB
 ## 9. RAG Pipeline - Simple Flowchart
 
 **File path:** `static/images/5-Workshop/5.1-Workshop-overview/rag-pipeline-simple.png`
+
+> ⚠️ **ĐÃ SỬA (24/07/2026):** Model sai (`Mixtral 8x7B` → `Qwen3-Next 80B-A3B`).
 
 **Mermaid code:**
 
@@ -478,7 +509,7 @@ flowchart TD
     Step4 --> Ready([Document indexed])
     
     Query([User query]) --> Step5[5. Semantic Search<br/>Retrieve top-k chunks<br/>from FAISS]
-    Step5 --> Step6[6. LLM Generation<br/>Context + Query<br/>Mixtral 8x7B]
+    Step5 --> Step6[6. LLM Generation<br/>Context + Query<br/>Qwen3-Next 80B-A3B]
     Step6 --> Response([Answer + Sources])
     
     style Start fill:#e1f5ff

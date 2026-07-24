@@ -23,7 +23,7 @@ Xin chúc mừng! Bạn đã hoàn thành việc triển khai và testing hệ t
 - Per-user data isolation với S3 prefixes + DynamoDB partition keys
 
 #### 3. **AI & Machine Learning Integration**
-- Sử dụng Amazon Bedrock (Mixtral 8x7B LLM + Titan Embeddings V2)
+- Sử dụng Amazon Bedrock (Qwen3-Next 80B-A3B LLM + Titan Embeddings V2)
 - Xây dựng RAG (Retrieval-Augmented Generation) pipeline
 - Vector search với FAISS in-memory database
 - Implement 3 RAG modes: Standard, Self-RAG, Co-RAG
