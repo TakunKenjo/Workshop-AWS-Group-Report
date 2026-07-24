@@ -27,10 +27,10 @@ Phần này kiểm tra đầy đủ 4 thao tác CRUD (Create/Read/Update/Delete)
 | 4.9 | Delete account | DELETE /profile | JWT + confirm: true | 200 OK<br/>Return: deleted_items (cognito_user, dynamodb_profile, s3_documents count, s3_avatar) | All resources cleaned up | PASS |
 | 4.10 | Verify Cognito user deleted | AWS CLI: list-users | Filter by email | Empty list (user not found) | - | PASS |
 | 4.11 | Verify DynamoDB record deleted | AWS CLI: get-item | Key: user_id | Empty Item | - | PASS |
-| 4.12 | Verify S3 objects deleted | AWS CLI: s3 ls | Path: users/{user_id}/ | Empty (no objects) | - | PASS |
-| 4.13 | Verify FAISS cleared | POST /chat after delete | JWT token (new user) | No vectors from old user | Per-user isolation works | PASS |
+| 4.12 | Verify S3 objects deleted | AWS CLI: s3 ls | Path: uploads/{user_id}/, vectorstore/{user_id}/ | Empty (no objects) | - | PASS |
+| 4.13 | Verify FAISS cleared | POST /api/chat sau khi xóa | JWT token (user mới) | Không còn vector của user cũ | Per-user isolation hoạt động đúng | PASS |
 
-**Điểm cuối API:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod/profile`
+**Điểm cuối API:** `https://d60866voq5.execute-api.us-east-1.amazonaws.com/prod/api/profile`
 
 **Sơ đồ dữ liệu hồ sơ (DynamoDB + Cognito):**
 ```json
@@ -49,7 +49,7 @@ Phần này kiểm tra đầy đủ 4 thao tác CRUD (Create/Read/Update/Delete)
 **Các bước dọn dẹp khi xóa tài khoản:**
 1. Xóa user trên Cognito (`admin_delete_user`)
 2. Xóa bản ghi hồ sơ trên DynamoDB
-3. Xóa toàn bộ object S3 dưới `users/{user_id}/` (tài liệu + avatar)
+3. Xóa toàn bộ object S3 dưới `uploads/{user_id}/`, `vectorstore/{user_id}/`, `avatars/{user_id}.jpg`
 4. Xóa dữ liệu vector FAISS của user (in-memory)
 
 ---
